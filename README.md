@@ -44,8 +44,8 @@ A professional, production-ready Next.js boilerplate designed specifically for f
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/website-boilerplate.git
-   cd website-boilerplate
+   git clone https://github.com/johnpaul-aquino/nextjs-boilerplate.git
+   cd nextjs-boilerplate
    ```
 
 2. **Install dependencies**
@@ -313,7 +313,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - 📧 **Email**: support@yourwebsite.com
 - 💬 **Discord**: [Join our community](https://discord.gg/your-server)
-- 🐛 **Issues**: [GitHub Issues](https://github.com/your-username/website-boilerplate/issues)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/johnpaul-aquino/nextjs-boilerplate/issues)
 - 📖 **Docs**: [Full Documentation](https://docs.yourwebsite.com)
 
 ---
