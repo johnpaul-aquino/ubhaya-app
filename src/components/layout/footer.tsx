@@ -96,7 +96,7 @@ const socialLinks = [
 
 /**
  * Footer component with flexible layouts and comprehensive link organization
- * Built following 21st.dev design system principles for consistent site structure
+ * Built following modern design system principles for consistent site structure
  * 
  * Features:
  * - Multiple layout variants (default, minimal, extended)

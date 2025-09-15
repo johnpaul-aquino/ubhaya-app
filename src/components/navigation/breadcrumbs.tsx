@@ -30,7 +30,7 @@ export interface BreadcrumbsProps extends React.HTMLAttributes<HTMLNavElement> {
 
 /**
  * Breadcrumbs component for hierarchical navigation
- * Built following 21st.dev design system principles for consistent navigation
+ * Built following modern design system principles for consistent navigation
  * 
  * Features:
  * - Customizable separator between items

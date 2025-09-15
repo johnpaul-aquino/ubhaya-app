@@ -41,7 +41,7 @@ const navigationItems: NavigationItem[] = [
 
 /**
  * Header component with responsive navigation and theme switching
- * Built following 21st.dev design system principles for consistent navigation
+ * Built following modern design system principles for consistent navigation
  * 
  * Features:
  * - Responsive navigation with mobile menu

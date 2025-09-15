@@ -33,7 +33,7 @@ export interface InputProps
 
 /**
  * Input component with comprehensive form validation support
- * Built following 21st.dev design system principles for consistent form experiences
+ * Built following modern design system principles for consistent form experiences
  * 
  * Features:
  * - Multiple size variants

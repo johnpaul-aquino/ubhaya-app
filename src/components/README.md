@@ -1,6 +1,6 @@
 # UI Components Library
 
-A comprehensive set of React UI components built following 21st.dev design system principles for the website boilerplate. All components are built with TypeScript, accessibility (WCAG AA+), and responsive design in mind.
+A comprehensive set of React UI components built following modern design system principles for the Next.js headless website boilerplate. All components are built with TypeScript, accessibility (WCAG AA+), responsive design, and Magic UI v4 compatibility in mind.
 
 ## 🎨 Theme System
 

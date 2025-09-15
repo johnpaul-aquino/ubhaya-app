@@ -20,7 +20,7 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 
 /**
  * Container component that provides consistent content width and centering
- * Built following 21st.dev design system principles for responsive layouts
+ * Built following modern design system principles for responsive layouts
  * 
  * Features:
  * - Responsive padding that adapts to screen size

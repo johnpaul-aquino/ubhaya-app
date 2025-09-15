@@ -34,7 +34,7 @@ export interface NavbarProps {
 
 /**
  * Navbar component with dropdown support and active state highlighting
- * Built following 21st.dev design system principles for consistent navigation
+ * Built following modern design system principles for consistent navigation
  * 
  * Features:
  * - Hierarchical navigation with dropdown menus

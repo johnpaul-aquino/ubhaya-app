@@ -33,7 +33,7 @@ export interface MobileMenuProps {
 
 /**
  * MobileMenu component with collapsible sections and active state highlighting
- * Built following 21st.dev design system principles for mobile navigation
+ * Built following modern design system principles for mobile navigation
  * 
  * Features:
  * - Collapsible sections for hierarchical navigation

@@ -31,7 +31,7 @@ export interface TextareaProps
 
 /**
  * Textarea component with comprehensive form validation and auto-resize support
- * Built following 21st.dev design system principles for consistent form experiences
+ * Built following modern design system principles for consistent form experiences
  * 
  * Features:
  * - Auto-resize functionality based on content

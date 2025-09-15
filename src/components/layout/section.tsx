@@ -32,7 +32,7 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
 
 /**
  * Section component that provides consistent vertical spacing and optional container wrapping
- * Built following 21st.dev design system principles for content organization
+ * Built following modern design system principles for content organization
  * 
  * Features:
  * - Flexible semantic HTML elements (section, div, main, etc.)

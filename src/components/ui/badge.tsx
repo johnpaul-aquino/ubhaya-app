@@ -45,7 +45,7 @@ export interface BadgeProps
 
 /**
  * Badge component for status indicators, tags, and labels
- * Built following 21st.dev design system principles for consistent visual hierarchy
+ * Built following modern design system principles for consistent visual hierarchy
  * 
  * Features:
  * - Multiple variants for different semantic meanings

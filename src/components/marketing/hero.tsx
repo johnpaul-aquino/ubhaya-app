@@ -57,7 +57,7 @@ export interface HeroProps extends React.HTMLAttributes<HTMLElement> {
 
 /**
  * Hero component for landing pages and marketing sections
- * Built following 21st.dev design system principles for maximum conversion
+ * Built following modern design system principles for maximum conversion
  * 
  * Features:
  * - Multiple layout variants (default, centered, split)

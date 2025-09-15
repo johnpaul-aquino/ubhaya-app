@@ -10,17 +10,17 @@ A **Next.js headless website boilerplate** optimized for:
 - **Color-Palette-Expert** → accessible, scalable color systems.
 - **SEO Architect** → high-performance SEO, structured metadata.
 - **NextJS-Headless-Architect** → modular, CMS-agnostic headless architecture.
-- **UI-UX with 21st.dev Tools** → leverage [21st.dev](https://21st.dev) for advanced UI/UX workflows, design tokens, and component management.
+- **UI-UX with Magic UI v4** → leverage [Magic UI](https://magicui.design) for advanced animated UI components, modern design patterns, and React 19 compatibility.
 - **Dynamic Media** → leverage **Unsplash MCP** for royalty-free images directly in development and prototyping.
 
 ---
 
 ## Tech Stack
 - Framework: **Next.js (latest)** with TypeScript.
-- Styling: **TailwindCSS** + **shadcn/ui**.
+- Styling: **TailwindCSS v4** + **shadcn/ui** + **Magic UI v4**.
 - CMS: Headless (Sanity / Contentful / Strapi, interchangeable).
 - SEO Tools: Next.js `<Head>`, Open Graph, sitemap, robots.txt, JSON-LD.
-- Design & DX: **21st.dev tools** for component playgrounds, token sync, automated docs.
+- Design & DX: **Magic UI v4** for animated components, modern UI patterns, and React 19 compatibility.
 - Media Assets: **Unsplash MCP** for dynamic images during development or demo content.
 - Testing: Jest / React Testing Library.
 - Tooling: ESLint, Prettier, Husky, Commitlint.
@@ -29,7 +29,7 @@ A **Next.js headless website boilerplate** optimized for:
 
 ## Directory Structure
 - `/src/app` → Next.js app routes.
-- `/src/components` → Reusable UI components (sync with 21st.dev).
+- `/src/components` → Reusable UI components (shadcn/ui + Magic UI v4).
 - `/src/lib` → Utilities and helpers.
 - `/src/styles` → Global styles, theme, typography.
 - `/src/hooks` → React hooks.
@@ -45,7 +45,7 @@ A **Next.js headless website boilerplate** optimized for:
 - `npm run test` — Run tests.
 - `npm run type-check` — Run TypeScript checks.
 - `npm run prepare` — Setup Husky hooks.
-- `npx 21st sync` — Sync components/design tokens with 21st.dev.
+- `npx shadcn@latest add @magicui/<component>` — Add Magic UI components.
 - `npx unsplash-mcp fetch <query>` — Fetch placeholder/demo images from Unsplash MCP.
 
 ---
@@ -53,11 +53,11 @@ A **Next.js headless website boilerplate** optimized for:
 ## Code Style & Conventions
 - MUST use **TypeScript** with explicit types for complex data.
 - MUST use **ES Modules** (`import/export`).
-- MUST use **Tailwind classes** and 21st.dev tokens for consistency.
+- MUST use **Tailwind v4 classes** and CSS custom properties for consistency.
 - SHOULD keep components small, composable, and accessible (ARIA compliance).
 - SHOULD use **PascalCase** for components, **camelCase** for functions/variables.
 - SHOULD document exported functions/components with JSDoc or TS doc comments.
-- DO NOT hardcode colors or fonts; use tokens synced via 21st.dev.
+- DO NOT hardcode colors or fonts; use CSS custom properties and design tokens.
 - DO NOT commit Unsplash MCP temporary images to production (use only for dev/demo).
 
 ---
@@ -72,21 +72,21 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## UI/UX Guidelines
-- Use **21st.dev tools** for:  
-  - Managing design tokens.  
-  - Building and previewing UI components.  
-  - Maintaining component documentation automatically.  
-- Use **Unsplash MCP** to fetch placeholder/demo images for prototypes and design mocks.  
-- Ensure **dark mode** with persistent theme toggle.  
-- Follow **WCAG AA+ accessibility** standards.  
+- Use **Magic UI v4** for:
+  - Animated UI components and micro-interactions.
+  - Modern design patterns with React 19 compatibility.
+  - Beautiful visual effects and transitions.
+- Use **Unsplash MCP** to fetch placeholder/demo images for prototypes and design mocks.
+- Ensure **dark mode** with persistent theme toggle.
+- Follow **WCAG AA+ accessibility** standards.
 - Provide **clear CTAs** in hero sections and forms.  
 
 ---
 
 ## UI Typography
-- Typography MUST be defined as **design tokens** and synced with **21st.dev**.
-- Tailwind’s `font-family`, `font-size`, and `line-height` scales MUST be extended in `tailwind.config.ts`.
-- Headings (`h1`–`h6`) MUST follow consistent scale and spacing, stored as tokens.
+- Typography MUST be defined as **CSS custom properties** for consistency and theming.
+- Tailwind v4's CSS-based configuration MUST define `font-family`, `font-size`, and `line-height` scales.
+- Headings (`h1`–`h6`) MUST follow consistent scale and spacing using CSS custom properties.
 - Body text SHOULD default to a **readable sans-serif** family with fallback stacks.
 - Font weights SHOULD be limited to a consistent set (e.g., `400`, `500`, `700`) for performance.
 - Text contrast MUST meet **WCAG AA+** requirements in both light and dark modes.
@@ -120,7 +120,7 @@ A **Next.js headless website boilerplate** optimized for:
 - DO NOT skip linting, formatting, or type checks.
 - Avoid large, monolithic components — break into smaller pieces.
 - Always check color contrast ratios before committing design changes.
-- Keep **21st.dev sync** updated after changes to components, tokens, or typography.
+- Use **Magic UI v4 components** responsibly - ensure they work well with existing design system.
 - Unsplash MCP assets are for **development/demo only**, replace with production-approved assets before deployment.
 
 ---

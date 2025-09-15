@@ -73,7 +73,7 @@ export interface TestimonialsProps extends React.HTMLAttributes<HTMLElement> {
 
 /**
  * Testimonials component for displaying customer feedback and social proof
- * Built following 21st.dev design system principles for credibility and trust
+ * Built following modern design system principles for credibility and trust
  * 
  * Features:
  * - Multiple layout variants (grid, masonry, featured)

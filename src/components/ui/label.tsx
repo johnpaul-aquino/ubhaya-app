@@ -44,7 +44,7 @@ export interface LabelProps
 
 /**
  * Label component for form fields
- * Built following 21st.dev design system principles for consistent form labeling
+ * Built following modern design system principles for consistent form labeling
  * 
  * Features:
  * - Multiple variants for different states
