@@ -6,7 +6,9 @@ It encodes conventions, workflows, and rules that MUST be followed.
 ---
 
 ## Project Overview
+
 A **Next.js headless website boilerplate** optimized for:
+
 - **Color-Palette-Expert** → accessible, scalable color systems.
 - **SEO Architect** → high-performance SEO, structured metadata.
 - **NextJS-Headless-Architect** → modular, CMS-agnostic headless architecture.
@@ -16,6 +18,7 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## Tech Stack
+
 - Framework: **Next.js (latest)** with TypeScript.
 - Styling: **TailwindCSS v4** + **shadcn/ui** + **Magic UI v4**.
 - CMS: Headless (Sanity / Contentful / Strapi, interchangeable).
@@ -28,6 +31,7 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## Directory Structure
+
 - `/src/app` → Next.js app routes.
 - `/src/components` → Reusable UI components (shadcn/ui + Magic UI v4).
 - `/src/lib` → Utilities and helpers.
@@ -39,6 +43,7 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## Commands
+
 - `npm run dev` — Start development server.
 - `npm run build` — Build for production.
 - `npm run lint` — Lint and format check.
@@ -51,6 +56,7 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## Code Style & Conventions
+
 - MUST use **TypeScript** with explicit types for complex data.
 - MUST use **ES Modules** (`import/export`).
 - MUST use **Tailwind v4 classes** and CSS custom properties for consistency.
@@ -63,6 +69,7 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## SEO Rules
+
 - MUST define unique `<title>` and `<meta description>` for every page.
 - MUST implement **Open Graph** and **Twitter Card** tags.
 - MUST generate **sitemap.xml** and **robots.txt**.
@@ -72,6 +79,7 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## UI/UX Guidelines
+
 - Use **Magic UI v4** for:
   - Animated UI components and micro-interactions.
   - Modern design patterns with React 19 compatibility.
@@ -79,11 +87,12 @@ A **Next.js headless website boilerplate** optimized for:
 - Use **Unsplash MCP** to fetch placeholder/demo images for prototypes and design mocks.
 - Ensure **dark mode** with persistent theme toggle.
 - Follow **WCAG AA+ accessibility** standards.
-- Provide **clear CTAs** in hero sections and forms.  
+- Provide **clear CTAs** in hero sections and forms.
 
 ---
 
 ## UI Typography
+
 - Typography MUST be defined as **CSS custom properties** for consistency and theming.
 - Tailwind v4's CSS-based configuration MUST define `font-family`, `font-size`, and `line-height` scales.
 - Headings (`h1`–`h6`) MUST follow consistent scale and spacing using CSS custom properties.
@@ -95,6 +104,7 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## Testing Strategy
+
 - MUST include unit tests for logic utilities.
 - SHOULD add integration tests for page flows.
 - MUST test accessibility (aXe, jest-axe).
@@ -103,19 +113,21 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## Git Workflow
-- Branches:  
-  - `feature/<name>`  
-  - `bugfix/<name>`  
-  - `chore/<name>`  
+
+- Branches:
+  - `feature/<name>`
+  - `bugfix/<name>`
+  - `chore/<name>`
 - Commits follow **Conventional Commits** (`feat:`, `fix:`, `chore:`, etc.).
-- Every PR MUST include:  
-  - Summary of changes.  
-  - Screenshots (if UI change).  
-  - Linked issue/task.  
+- Every PR MUST include:
+  - Summary of changes.
+  - Screenshots (if UI change).
+  - Linked issue/task.
 
 ---
 
 ## Warnings & Gotchas
+
 - DO NOT commit `.env` files or secrets.
 - DO NOT skip linting, formatting, or type checks.
 - Avoid large, monolithic components — break into smaller pieces.
@@ -126,8 +138,10 @@ A **Next.js headless website boilerplate** optimized for:
 ---
 
 ## Process Reminders
+
 - Always consult this file before coding.
 - When adding new dependencies, update this file if relevant.
 - If unsure about rules, ask for clarification instead of guessing.
 - Update this file as the project evolves.
 - npm run dev in port 3006
+- we will use prisma as our orm to manage our database migration

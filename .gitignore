@@ -154,6 +154,10 @@ sanity/dist
 *.sqlite3
 *.db
 
+# Docker
+docker-compose.override.yml
+postgres_data/
+
 # Testing
 /coverage
 .nyc_output
