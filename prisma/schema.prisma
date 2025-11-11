@@ -1,0 +1,189 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTHENTICATION MODELS
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+
+  // Basic Info
+  firstName     String
+  lastName      String
+  phoneNumber   String?
+  whatsappNumber String?
+  avatar        String?
+
+  // Status
+  emailVerified DateTime?
+  isActive      Boolean   @default(true)
+
+  // Team & Role
+  role          UserRole  @default(MEMBER)
+  teamId        String?
+  team          Team?     @relation(fields: [teamId], references: [id])
+
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  // Relations
+  sessions      Session[]
+  accounts      Account[]
+  passwordResets PasswordReset[]
+
+  // Dashboard Relations (connect to existing models later)
+  contacts      Contact[]
+  shipments     Shipment[]
+
+  @@index([email])
+  @@index([teamId])
+  @@map("users")
+}
+
+model Team {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  avatar      String?
+
+  // Team Owner
+  ownerId     String
+
+  // Members
+  members     User[]
+
+  // Settings
+  maxMembers  Int       @default(10)
+  isActive    Boolean   @default(true)
+
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations (shared resources)
+  contacts    Contact[]
+
+  @@index([slug])
+  @@map("teams")
+}
+
+enum UserRole {
+  ADMIN         // Full system access
+  TEAM_LEADER   // Manage team and resources
+  MEMBER        // Standard access
+  VIEWER        // Read-only access
+}
+
+// ============================================
+// NEXTAUTH REQUIRED MODELS
+// ============================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// PASSWORD RESET
+// ============================================
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expires   DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@map("password_resets")
+}
+
+// ============================================
+// PLACEHOLDER MODELS (to be implemented later)
+// ============================================
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  userId    String
+  teamId    String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team      Team?    @relation(fields: [teamId], references: [id])
+
+  @@index([userId])
+  @@index([teamId])
+  @@map("contacts")
+}
+
+model Shipment {
+  id          String   @id @default(cuid())
+  trackingId  String   @unique
+  origin      String
+  destination String
+  status      String
+  userId      String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("shipments")
+}
