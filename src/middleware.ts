@@ -1,17 +1,24 @@
 /**
  * Next.js Middleware
- * Handles authentication and route protection
+ * Handles authentication and route protection with role-based access control
  */
 
 import { auth } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import type { UserRole } from '@prisma/client';
 
-// Define protected routes
+// Define protected routes (require authentication)
 const protectedRoutes = ['/dashboard'];
 
 // Define auth routes (redirect to dashboard if already logged in)
 const authRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
+
+// Define admin-only routes
+const adminRoutes = ['/dashboard/admin'];
+
+// Define team leader routes (team leader or admin can access)
+const teamLeaderRoutes = ['/dashboard/team'];
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -27,6 +34,14 @@ export default async function middleware(request: NextRequest) {
   // Check if route is auth route
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
+  // Check if route requires admin access
+  const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
+
+  // Check if route requires team leader access
+  const isTeamLeaderRoute = teamLeaderRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
   // Redirect to login if accessing protected route without session
   if (isProtectedRoute && !session) {
     const loginUrl = new URL('/login', request.url);
@@ -37,6 +52,21 @@ export default async function middleware(request: NextRequest) {
   // Redirect to dashboard if accessing auth route with active session
   if (isAuthRoute && session) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  // Role-based access control
+  if (session?.user) {
+    const userRole = session.user.role as UserRole;
+
+    // Check admin-only routes
+    if (isAdminRoute && userRole !== 'ADMIN') {
+      return NextResponse.redirect(new URL('/dashboard?error=unauthorized', request.url));
+    }
+
+    // Check team leader routes (TEAM_LEADER or ADMIN)
+    if (isTeamLeaderRoute && !['TEAM_LEADER', 'ADMIN'].includes(userRole)) {
+      return NextResponse.redirect(new URL('/dashboard?error=unauthorized', request.url));
+    }
   }
 
   return NextResponse.next();

@@ -1,6 +1,8 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { Montserrat, Fira_Code } from 'next/font/google';
+import { AuthProvider } from '@/components/auth/auth-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 // Montserrat for main UI - as specified in OKLCH theme
 const montserrat = Montserrat({
@@ -81,11 +83,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={`${montserrat.variable} ${firaCode.variable} font-sans`}>
-        <div className="relative min-h-screen bg-background">
-          <main className="relative">
-            {children}
-          </main>
-        </div>
+        <AuthProvider>
+          <div className="relative min-h-screen bg-background">
+            <main className="relative">
+              {children}
+            </main>
+          </div>
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   );

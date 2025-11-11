@@ -1,15 +1,20 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Bell, LogOut, Menu, Search, X } from 'lucide-react';
+import { Bell, Menu, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { UserMenu } from '@/components/dashboard/user-menu';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
 interface NavbarProps {
-  username?: string;
-  userInitials?: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+  };
   isSidebarOpen?: boolean;
   onSidebarToggle?: () => void;
   onSearch?: (query: string) => void;
@@ -20,8 +25,7 @@ interface NavbarProps {
  * Top navigation bar with search, notifications, and user menu
  */
 export function Navbar({
-  username = 'John Doe',
-  userInitials = 'JD',
+  user,
   isSidebarOpen = false,
   onSidebarToggle,
   onSearch
@@ -120,25 +124,7 @@ export function Navbar({
           </Button>
 
           {/* User Menu */}
-          <div className="hidden sm:flex items-center gap-2 md:gap-3 px-2 md:px-3 py-1 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer">
-            <div
-              className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-purple-600 to-purple-500 flex items-center justify-center text-white text-xs md:text-sm font-semibold flex-shrink-0"
-              title={username}
-            >
-              {userInitials}
-            </div>
-            <span className="hidden md:inline text-sm font-medium text-foreground">
-              {username}
-            </span>
-          </div>
-
-          {/* Logout */}
-          <Link href="/login">
-            <Button variant="outline" size="sm" className="gap-2">
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Logout</span>
-            </Button>
-          </Link>
+          <UserMenu user={user} />
         </div>
       </div>
     </header>
