@@ -1,8 +1,22 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Montserrat, Fira_Code } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+// Montserrat for main UI - as specified in OKLCH theme
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+// Fira Code for monospace - as specified in OKLCH theme
+const firaCode = Fira_Code({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -66,7 +80,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={inter.className}>
+      <body className={`${montserrat.variable} ${firaCode.variable} font-sans`}>
         <div className="relative min-h-screen bg-background">
           <main className="relative">
             {children}

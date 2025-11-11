@@ -1,5 +1,7 @@
+import next from "eslint-config-next";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import js from '@eslint/js';
-import nextPlugin from '@next/eslint-plugin-next';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import prettierConfig from 'eslint-config-prettier';
@@ -7,6 +9,9 @@ import typescriptParser from '@typescript-eslint/parser';
 import typescriptPlugin from '@typescript-eslint/eslint-plugin';
 
 export default [
+  ...next,
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   js.configs.recommended,
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -26,14 +31,11 @@ export default [
     },
     plugins: {
       '@typescript-eslint': typescriptPlugin,
-      '@next/next': nextPlugin,
       'react': reactPlugin,
       'react-hooks': reactHooksPlugin,
     },
     rules: {
       ...typescriptPlugin.configs.recommended.rules,
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs['core-web-vitals'].rules,
       ...reactPlugin.configs.recommended.rules,
       ...reactHooksPlugin.configs.recommended.rules,
       
@@ -42,8 +44,6 @@ export default [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/prefer-const': 'error',
-      '@typescript-eslint/no-var-requires': 'error',
       
       // React specific rules
       'react/react-in-jsx-scope': 'off',
@@ -79,4 +79,7 @@ export default [
     },
   },
   prettierConfig,
+  {
+    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts"]
+  }
 ];

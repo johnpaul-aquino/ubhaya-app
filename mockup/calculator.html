@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubhaya - Shipping Calculator</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        .calculator-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .calculator-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .calculator-header h1 {
+            color: #6B46C1;
+            margin-bottom: 8px;
+        }
+
+        .calculator-input {
+            margin-bottom: 24px;
+        }
+
+        .calculator-label {
+            display: block;
+            color: #6B46C1;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        .calculator-field {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .calculator-field:focus {
+            outline: none;
+            border-color: #6B46C1;
+            box-shadow: 0 0 0 4px rgba(107, 70, 193, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: #1f2937;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calculate-btn:hover {
+            background: #111827;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .results-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .result-card {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .result-card:hover {
+            border-color: #6B46C1;
+            box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .carrier-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.125rem;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .saved-quotes {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="logo">Ubhaya</div>
+        <div class="topbar-nav">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search anything...">
+            </div>
+            <a href="#" class="btn btn-icon">🔔</a>
+            <div class="user-menu">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6B46C1, #9333EA); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; flex-shrink: 0;">JD</div>
+                <span>John Doe</span>
+            </div>
+            <a href="login.html" class="btn btn-sm btn-outline">Logout</a>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="index.html">🏠 Dashboard</a></li>
+                <li><a href="facilities.html">🔍 Facilities</a></li>
+                <li><a href="shipments.html">📦 Shipments</a></li>
+                <li><a href="contacts.html">👥 Contacts</a></li>
+                <li><a href="calculator.html" class="active">📊 Shipping Calculator</a></li>
+                <li><a href="documents.html">📁 Documents</a></li>
+                <li><a href="team.html">👨‍👩‍👧‍👦 Team</a></li>
+                <li><a href="#">⚙️ Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="mb-xl text-center">
+                <h1>Shipping Calculator</h1>
+                <p class="text-muted">Calculate shipping costs and delivery times instantly</p>
+            </div>
+
+            <!-- Calculator Section -->
+            <div class="calculator-container">
+                <div class="calculator-card">
+                    <div class="calculator-header">
+                        <span style="font-size: 3rem;">📦</span>
+                        <h2 style="color: #1f2937;">Calculate Shipping Cost</h2>
+                    </div>
+
+                    <form id="shipping-calculator-form">
+                        <div class="calculator-input">
+                            <label class="calculator-label">Source Pincode <span style="color: #ef4444;">*</span></label>
+                            <input type="text" id="sourcePincode" name="sourcePincode" class="calculator-field" placeholder="Enter source pincode" value="560066" maxlength="6" pattern="[0-9]{6}" required>
+                            <span class="error-message" id="sourcePincodeError" style="color: #ef4444; font-size: 0.875rem; display: none;">Invalid pincode format</span>
+                        </div>
+
+                        <div class="calculator-input">
+                            <label class="calculator-label">Destination Pincode <span style="color: #ef4444;">*</span></label>
+                            <input type="text" id="destPincode" name="destPincode" class="calculator-field" placeholder="Enter destination pincode" value="400001" maxlength="6" pattern="[0-9]{6}" required>
+                            <span class="error-message" id="destPincodeError" style="color: #ef4444; font-size: 0.875rem; display: none;">Invalid pincode format</span>
+                        </div>
+
+                        <div class="calculator-input">
+                            <label class="calculator-label">Package Weight (kg) <span style="color: #ef4444;">*</span></label>
+                            <input type="number" id="weight" name="weight" class="calculator-field" placeholder="Enter package weight in kg" value="5" min="0.1" max="50" step="0.1" required>
+                            <span class="error-message" id="weightError" style="color: #ef4444; font-size: 0.875rem; display: none;">Weight must be between 0.1 and 50 kg</span>
+                        </div>
+
+                        <div class="calculator-input">
+                            <label class="calculator-label">Package Dimensions (Optional)</label>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                                <div>
+                                    <input type="number" id="length" name="length" class="calculator-field" placeholder="Length (cm)" value="30" min="1">
+                                    <span class="error-message" id="lengthError" style="color: #ef4444; font-size: 0.875rem; display: none;">Invalid value</span>
+                                </div>
+                                <div>
+                                    <input type="number" id="width" name="width" class="calculator-field" placeholder="Width (cm)" value="20" min="1">
+                                    <span class="error-message" id="widthError" style="color: #ef4444; font-size: 0.875rem; display: none;">Invalid value</span>
+                                </div>
+                                <div>
+                                    <input type="number" id="height" name="height" class="calculator-field" placeholder="Height (cm)" value="15" min="1">
+                                    <span class="error-message" id="heightError" style="color: #ef4444; font-size: 0.875rem; display: none;">Invalid value</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="calculator-input">
+                            <label class="calculator-label">Shipping Type <span style="color: #ef4444;">*</span></label>
+                            <select id="shippingType" name="shippingType" class="calculator-field" required>
+                                <option value="">Select shipping type</option>
+                                <option value="standard">Standard Delivery (3-5 days)</option>
+                                <option value="express">Express Delivery (2-3 days)</option>
+                                <option value="same-day">Same Day Delivery</option>
+                                <option value="economy">Economy Delivery (5-7 days)</option>
+                            </select>
+                            <span class="error-message" id="shippingTypeError" style="color: #ef4444; font-size: 0.875rem; display: none;">Please select a shipping type</span>
+                        </div>
+
+                        <div style="display: flex; gap: 12px;">
+                            <button type="button" class="calculate-btn" onclick="calculateShipping()">Calculate</button>
+                            <button type="button" class="calculate-btn" style="background: #6b7280;" onclick="resetForm()">Clear</button>
+                        </div>
+                    </form>
+
+                    <!-- Results Section -->
+                    <div class="results-section" id="results" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">📊 Shipping Options</h3>
+
+                        <!-- Loading State -->
+                        <div id="loadingState" style="display: none; text-align: center; padding: 40px;">
+                            <div style="font-size: 1.5rem; margin-bottom: 16px;">⏳</div>
+                            <p style="color: #6b7280;">Calculating shipping options...</p>
+                        </div>
+
+                        <!-- Results Container -->
+                        <div id="resultsContainer"></div>
+
+                        <!-- Save Quote Button -->
+                        <button class="btn btn-secondary" id="saveQuoteBtn" style="width: 100%; margin-top: 24px; display: none;">
+                            💾 Save This Quote
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Saved Quotes Section -->
+                <div class="saved-quotes">
+                    <h3 style="margin-bottom: 20px;">📋 Recent Quotes</h3>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Route</th>
+                                    <th>Weight</th>
+                                    <th>Best Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dec 2, 2024</td>
+                                    <td>560066 → 400001</td>
+                                    <td>5 kg</td>
+                                    <td style="color: #6B46C1; font-weight: 600;">₹320</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">View</button>
+                                        <button class="btn btn-sm btn-primary">Use</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dec 1, 2024</td>
+                                    <td>110001 → 600001</td>
+                                    <td>2.5 kg</td>
+                                    <td style="color: #6B46C1; font-weight: 600;">₹450</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">View</button>
+                                        <button class="btn btn-sm btn-primary">Use</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 30, 2024</td>
+                                    <td>700001 → 500001</td>
+                                    <td>10 kg</td>
+                                    <td style="color: #6B46C1; font-weight: 600;">₹780</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">View</button>
+                                        <button class="btn btn-sm btn-primary">Use</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Carrier database with base rates
+        const carriers = [
+            {
+                id: 'blue-dart',
+                name: 'Blue Dart Express',
+                initials: 'BD',
+                gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                baseRate: 250,
+                minDeliveryDays: 2,
+                maxDeliveryDays: 3,
+                type: 'Air Freight',
+                perKgRate: 50,
+                tags: ['Fastest', 'Recommended']
+            },
+            {
+                id: 'dhl',
+                name: 'DHL Logistics',
+                initials: 'DH',
+                gradient: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+                baseRate: 150,
+                minDeliveryDays: 4,
+                maxDeliveryDays: 5,
+                type: 'Road Transport',
+                perKgRate: 30,
+                tags: ['Good Value']
+            },
+            {
+                id: 'india-post',
+                name: 'India Post',
+                initials: 'IP',
+                gradient: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                baseRate: 50,
+                minDeliveryDays: 7,
+                maxDeliveryDays: 10,
+                type: 'Standard Mail',
+                perKgRate: 15,
+                tags: ['Cheapest']
+            },
+            {
+                id: 'fedex',
+                name: 'FedEx Priority',
+                initials: 'FX',
+                gradient: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+                baseRate: 400,
+                minDeliveryDays: 1,
+                maxDeliveryDays: 2,
+                type: 'Air Freight',
+                perKgRate: 80,
+                tags: ['Premium']
+            }
+        ];
+
+        // Shipping type multipliers
+        const shippingTypeMultipliers = {
+            'standard': 1.0,
+            'express': 1.5,
+            'same-day': 2.0,
+            'economy': 0.8
+        };
+
+        // Zone mapping based on pincode ranges (simplified)
+        function getZone(sourcePincode, destPincode) {
+            const source = parseInt(sourcePincode.substring(0, 2));
+            const dest = parseInt(destPincode.substring(0, 2));
+            const distance = Math.abs(source - dest);
+
+            if (distance <= 5) return 1; // Local
+            if (distance <= 20) return 2; // Zone 1
+            if (distance <= 50) return 3; // Zone 2
+            return 4; // Zone 3 (National)
+        }
+
+        function validateForm() {
+            let isValid = true;
+
+            // Hide all errors first
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+            // Validate source pincode
+            const sourcePincode = document.getElementById('sourcePincode').value;
+            if (!sourcePincode || !/^\d{6}$/.test(sourcePincode)) {
+                document.getElementById('sourcePincodeError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate destination pincode
+            const destPincode = document.getElementById('destPincode').value;
+            if (!destPincode || !/^\d{6}$/.test(destPincode)) {
+                document.getElementById('destPincodeError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate weight
+            const weight = parseFloat(document.getElementById('weight').value);
+            if (!weight || weight < 0.1 || weight > 50) {
+                document.getElementById('weightError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate shipping type
+            const shippingType = document.getElementById('shippingType').value;
+            if (!shippingType) {
+                document.getElementById('shippingTypeError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate dimensions if provided
+            const length = document.getElementById('length').value;
+            const width = document.getElementById('width').value;
+            const height = document.getElementById('height').value;
+
+            if (length && length < 1) {
+                document.getElementById('lengthError').style.display = 'block';
+                isValid = false;
+            }
+            if (width && width < 1) {
+                document.getElementById('widthError').style.display = 'block';
+                isValid = false;
+            }
+            if (height && height < 1) {
+                document.getElementById('heightError').style.display = 'block';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function calculateVolumetricWeight(length, width, height) {
+            if (!length || !width || !height) return 0;
+            return (length * width * height) / 5000; // Standard divisor
+        }
+
+        function calculateShipping() {
+            if (!validateForm()) {
+                return;
+            }
+
+            // Get form values
+            const sourcePincode = document.getElementById('sourcePincode').value;
+            const destPincode = document.getElementById('destPincode').value;
+            const actualWeight = parseFloat(document.getElementById('weight').value);
+            const shippingType = document.getElementById('shippingType').value;
+            const length = parseFloat(document.getElementById('length').value) || 0;
+            const width = parseFloat(document.getElementById('width').value) || 0;
+            const height = parseFloat(document.getElementById('height').value) || 0;
+
+            // Calculate volumetric weight
+            const volumetricWeight = calculateVolumetricWeight(length, width, height);
+            const chargeableWeight = Math.max(actualWeight, volumetricWeight);
+
+            // Get zone
+            const zone = getZone(sourcePincode, destPincode);
+            const zoneMultiplier = 1 + (zone - 1) * 0.3; // Zone increases cost
+
+            // Get shipping type multiplier
+            const typeMultiplier = shippingTypeMultipliers[shippingType] || 1.0;
+
+            // Show loading state
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('saveQuoteBtn').style.display = 'none';
+
+            // Simulate API call delay
+            setTimeout(() => {
+                document.getElementById('loadingState').style.display = 'none';
+
+                // Calculate prices for each carrier
+                const results = carriers.map(carrier => {
+                    const basePrice = carrier.baseRate + (chargeableWeight * carrier.perKgRate);
+                    const zonedPrice = basePrice * zoneMultiplier;
+                    const finalPrice = Math.round(zonedPrice * typeMultiplier);
+
+                    return {
+                        ...carrier,
+                        chargeableWeight,
+                        actualWeight,
+                        volumetricWeight,
+                        basePrice,
+                        finalPrice,
+                        sourcePincode,
+                        destPincode,
+                        shippingType
+                    };
+                });
+
+                // Sort by price
+                results.sort((a, b) => a.finalPrice - b.finalPrice);
+
+                // Render results
+                renderResults(results);
+                document.getElementById('saveQuoteBtn').style.display = 'block';
+
+                // Scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+                // Store current quote for saving
+                window.currentQuote = results;
+            }, 500);
+        }
+
+        function renderResults(results) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+
+            results.forEach((result, index) => {
+                const badgesHtml = result.tags.map(tag => {
+                    let badgeClass = 'badge-purple';
+                    if (tag === 'Cheapest') badgeClass = 'badge-success';
+                    if (tag === 'Fastest') badgeClass = 'badge-blue';
+                    if (tag === 'Good Value') badgeClass = 'badge-blue';
+                    if (tag === 'Premium') badgeClass = 'badge-warning';
+                    if (tag === 'Recommended') badgeClass = 'badge-purple';
+                    return `<span class="badge ${badgeClass}">${tag}</span>`;
+                }).join('');
+
+                const deliveryDays = `${result.minDeliveryDays}-${result.maxDeliveryDays} business days`;
+                const weightInfo = result.volumetricWeight > result.actualWeight
+                    ? `Volumetric: ${result.volumetricWeight.toFixed(2)} kg`
+                    : `Actual: ${result.actualWeight} kg`;
+
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        <div style="width: 56px; height: 56px; border-radius: 50%; background: ${result.gradient}; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.25rem; flex-shrink: 0;">${result.initials}</div>
+                        <div style="flex: 1;">
+                            <div class="result-header">
+                                <div>
+                                    <div class="carrier-name">${result.name}</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">${result.type} • ${deliveryDays}</div>
+                                </div>
+                                <div class="price">₹${result.finalPrice.toLocaleString('en-IN')}</div>
+                            </div>
+                            <div style="display: flex; gap: 8px; margin-top: 8px; font-size: 0.75rem;">
+                                <span style="color: #6b7280;">Weight: ${weightInfo}</span>
+                            </div>
+                            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                ${badgesHtml}
+                            </div>
+                            <button class="btn btn-sm btn-primary mt-md" onclick="selectCarrier('${result.id}', '${result.name}', ${result.finalPrice}, '${result.minDeliveryDays}-${result.maxDeliveryDays} days')">Select This Option</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectCarrier(carrierId, carrierName, price, deliveryDays) {
+            // Store selected quote in sessionStorage
+            const quote = {
+                carrierId,
+                carrierName,
+                price,
+                deliveryDays,
+                timestamp: new Date().toLocaleString()
+            };
+
+            // Store form data too
+            const formData = {
+                sourcePincode: document.getElementById('sourcePincode').value,
+                destPincode: document.getElementById('destPincode').value,
+                weight: document.getElementById('weight').value,
+                shippingType: document.getElementById('shippingType').value
+            };
+
+            sessionStorage.setItem('selectedQuote', JSON.stringify(quote));
+            sessionStorage.setItem('shippingFormData', JSON.stringify(formData));
+
+            // Show notification
+            showNotification(`Selected ${carrierName} - ₹${price}`, 'success');
+
+            // Navigate to shipments page after 1 second
+            setTimeout(() => {
+                window.location.href = 'shipments.html?quote=' + encodeURIComponent(JSON.stringify(quote));
+            }, 1000);
+        }
+
+        function saveQuote() {
+            if (!window.currentQuote || window.currentQuote.length === 0) {
+                showNotification('Please calculate shipping first', 'error');
+                return;
+            }
+
+            const quote = {
+                date: new Date().toLocaleDateString('en-IN'),
+                sourcePincode: document.getElementById('sourcePincode').value,
+                destPincode: document.getElementById('destPincode').value,
+                weight: document.getElementById('weight').value,
+                results: window.currentQuote,
+                bestPrice: window.currentQuote[0].finalPrice
+            };
+
+            // Get existing quotes
+            const existingQuotes = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+            existingQuotes.unshift(quote);
+
+            // Keep only last 10 quotes
+            const savedQuotes = existingQuotes.slice(0, 10);
+            localStorage.setItem('savedQuotes', JSON.stringify(savedQuotes));
+
+            showNotification('Quote saved successfully', 'success');
+            updateSavedQuotesTable();
+        }
+
+        function updateSavedQuotesTable() {
+            const savedQuotes = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+            const tbody = document.querySelector('.table tbody');
+
+            if (savedQuotes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280;">No quotes saved yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = savedQuotes.map((quote, index) => `
+                <tr>
+                    <td>${quote.date}</td>
+                    <td>${quote.sourcePincode} → ${quote.destPincode}</td>
+                    <td>${quote.weight} kg</td>
+                    <td style="color: #6B46C1; font-weight: 600;">₹${quote.bestPrice}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="viewQuote(${index})">View</button>
+                        <button class="btn btn-sm btn-primary" onclick="useQuote(${index})">Use</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewQuote(index) {
+            const savedQuotes = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+            const quote = savedQuotes[index];
+
+            // Format quote details
+            let details = `Date: ${quote.date}\n`;
+            details += `Route: ${quote.sourcePincode} → ${quote.destPincode}\n`;
+            details += `Weight: ${quote.weight} kg\n\n`;
+            details += `Available Options:\n`;
+            quote.results.forEach(result => {
+                details += `• ${result.name}: ₹${result.finalPrice} (${result.minDeliveryDays}-${result.maxDeliveryDays} days)\n`;
+            });
+
+            alert(details);
+        }
+
+        function useQuote(index) {
+            const savedQuotes = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+            const quote = savedQuotes[index];
+
+            // Populate form with saved data
+            document.getElementById('sourcePincode').value = quote.sourcePincode;
+            document.getElementById('destPincode').value = quote.destPincode;
+            document.getElementById('weight').value = quote.weight;
+
+            // Scroll to form
+            document.querySelector('form').scrollIntoView({ behavior: 'smooth' });
+            showNotification('Quote loaded - click Calculate to recalculate', 'success');
+        }
+
+        function resetForm() {
+            document.getElementById('shipping-calculator-form').reset();
+            document.getElementById('results').style.display = 'none';
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            showNotification('Form cleared', 'success');
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 16px 24px;
+                background: ${type === 'success' ? '#22c55e' : '#ef4444'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Load saved quotes on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSavedQuotesTable();
+
+            // Add CSS animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(400px); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(400px); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // Attach save quote button
+        document.getElementById('saveQuoteBtn').addEventListener('click', saveQuote);
+    </script>
+</body>
+</html>

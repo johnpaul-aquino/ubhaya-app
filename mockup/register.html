@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubhaya - Register</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-modal {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-button:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-register {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #6B46C1 0%, #9333EA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .country-code-input {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 8px;
+        }
+
+        .progress-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 999px;
+        }
+
+        .progress-step.active {
+            background: linear-gradient(90deg, #6B46C1, #9333EA);
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .register-modal {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-modal">
+        <button class="close-button" onclick="window.location.href='login.html'">✕</button>
+
+        <div class="register-header">
+            <div class="logo-register">Ubhaya</div>
+            <h1>Register</h1>
+            <p class="text-muted">Create an account, it's free</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-step active"></div>
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+        </div>
+
+        <form>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-input" placeholder="Enter first name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-input" placeholder="Enter last name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Gmail/Email</label>
+                <div class="form-input-icon">
+                    <span class="input-icon">@</span>
+                    <input type="email" class="form-input" placeholder="your.email@gmail.com" style="padding-left: 48px;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">WhatsApp Number</label>
+                <div class="country-code-input">
+                    <select class="form-select">
+                        <option>+91 🇮🇳</option>
+                        <option>+63 🇵🇭</option>
+                        <option>+65 🇸🇬</option>
+                        <option>+60 🇲🇾</option>
+                        <option>+66 🇹🇭</option>
+                        <option>+1 🇺🇸</option>
+                    </select>
+                    <input type="tel" class="form-input" placeholder="98765 43210">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" placeholder="Create a strong password">
+                <p class="text-small text-muted mt-sm">Must be at least 8 characters with numbers and letters</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Address (Optional)</label>
+                <textarea class="form-input" rows="3" placeholder="Enter your business address"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Company/Team Name (Optional)</label>
+                <input type="text" class="form-input" placeholder="Enter your company or team name">
+            </div>
+
+            <div style="margin: 24px 0;">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="text-small">I agree to the <a href="#" style="color: #6B46C1;">Terms of Service</a> and <a href="#" style="color: #6B46C1;">Privacy Policy</a></span>
+                </label>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-lg" style="width: 100%;" onclick="showSuccess()">
+                Create Account
+            </button>
+
+            <div style="text-align: center; margin-top: 24px;">
+                <p class="text-muted">
+                    Already have an account?
+                    <a href="login.html" style="color: #6B46C1; font-weight: 600;">Login</a>
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Message (Hidden by default) -->
+    <div id="success-message" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; z-index: 1000;">
+        <div style="font-size: 3rem; margin-bottom: 16px;">✅</div>
+        <h2 style="margin-bottom: 8px;">Registration Successful!</h2>
+        <p class="text-muted">Your account has been created successfully.</p>
+        <button class="btn btn-primary mt-lg" onclick="window.location.href='login.html'">Go to Login</button>
+    </div>
+
+    <script>
+        function showSuccess() {
+            document.getElementById('success-message').style.display = 'block';
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

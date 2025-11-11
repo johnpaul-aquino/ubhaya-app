@@ -130,3 +130,4 @@ A **Next.js headless website boilerplate** optimized for:
 - When adding new dependencies, update this file if relevant.
 - If unsure about rules, ask for clarification instead of guessing.
 - Update this file as the project evolves.
+- npm run dev in port 3006

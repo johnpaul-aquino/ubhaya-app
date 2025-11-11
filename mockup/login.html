@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubhaya - Login</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .login-left {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-right {
+            background: linear-gradient(135deg, #6B46C1 0%, #9333EA 100%);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .logo-login {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3rem;
+            background: linear-gradient(135deg, #6B46C1 0%, #9333EA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .login-form {
+            margin-top: 40px;
+        }
+
+        .form-input-icon {
+            position: relative;
+        }
+
+        .form-input-icon input {
+            padding-left: 48px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .feature-list {
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+            .login-right {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side - Login Form -->
+        <div class="login-left">
+            <div>
+                <div class="logo-login">Ubhaya</div>
+                <h1>Login to your account</h1>
+                <p class="text-muted">Welcome back! Please enter your details.</p>
+            </div>
+
+            <form class="login-form">
+                <div class="form-group">
+                    <label class="form-label">UserID</label>
+                    <div class="form-input-icon">
+                        <span class="input-icon">👤</span>
+                        <input type="text" class="form-input" placeholder="PW8888" value="PW8888">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="form-input-icon">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" class="form-input" id="password" placeholder="Enter your password">
+                        <button type="button" class="password-toggle" onclick="togglePassword()">👁️</button>
+                    </div>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="checkbox-label">
+                        <input type="checkbox" checked>
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" style="color: #6B46C1;">Forgot?</a>
+                </div>
+
+                <button type="button" class="btn btn-blue btn-lg" style="width: 100%;" onclick="window.location.href='index.html'">
+                    Login now
+                </button>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <p class="text-muted">
+                        Don't Have An Account?
+                        <a href="register.html" style="color: #6B46C1; font-weight: 600;">Sign Up</a>
+                    </p>
+                </div>
+
+                <div style="position: relative; margin: 32px 0;">
+                    <hr style="border: none; border-top: 1px solid #e5e7eb;">
+                    <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: white; padding: 0 16px; color: #6b7280;">
+                        OR
+                    </span>
+                </div>
+
+                <button type="button" class="btn btn-outline btn-lg" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                    <span>🔷</span> Continue with Google
+                </button>
+            </form>
+        </div>
+
+        <!-- Right Side - Features -->
+        <div class="login-right">
+            <div>
+                <h2 style="font-size: 2.5rem; margin-bottom: 16px; color: white;">Welcome to Ubhaya</h2>
+                <p style="font-size: 1.125rem; opacity: 0.95; margin-bottom: 40px;">
+                    Your comprehensive supply chain management platform
+                </p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🌍</div>
+                        <div style="text-align: left;">
+                            <div style="font-weight: 600; margin-bottom: 4px;">50,000+ Facilities</div>
+                            <div style="opacity: 0.9; font-size: 0.875rem;">Access global facility database</div>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">📦</div>
+                        <div style="text-align: left;">
+                            <div style="font-weight: 600; margin-bottom: 4px;">Real-time Tracking</div>
+                            <div style="opacity: 0.9; font-size: 0.875rem;">Monitor shipments live</div>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">💬</div>
+                        <div style="text-align: left;">
+                            <div style="font-weight: 600; margin-bottom: 4px;">WhatsApp Integration</div>
+                            <div style="opacity: 0.9; font-size: 0.875rem;">Communicate seamlessly</div>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">👥</div>
+                        <div style="text-align: left;">
+                            <div style="font-weight: 600; margin-bottom: 4px;">Team Collaboration</div>
+                            <div style="opacity: 0.9; font-size: 0.875rem;">Work together efficiently</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.2);">
+                    <p style="opacity: 0.8; font-size: 0.875rem;">
+                        Trusted by 500+ businesses worldwide
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.querySelector('.password-toggle');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = '👁️‍🗨️';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = '👁️';
+            }
+        }
+    </script>
+</body>
+</html>

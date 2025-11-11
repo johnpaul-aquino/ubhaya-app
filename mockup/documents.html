@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubhaya - Document Management</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        .document-tools {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            border-color: #6B46C1;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(107, 70, 193, 0.1);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .notes-editor {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .editor-btn {
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .editor-btn:hover {
+            background: #f9fafb;
+            border-color: #6B46C1;
+        }
+
+        .editor-content {
+            min-height: 300px;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #e5e7eb;
+            border-radius: 12px;
+            padding: 48px;
+            text-align: center;
+            background: #f9fafb;
+            transition: all 0.2s;
+        }
+
+        .file-upload-area:hover {
+            border-color: #6B46C1;
+            background: #f3f4f6;
+        }
+
+        .file-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .file-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .file-icon {
+            font-size: 2rem;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .file-meta {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="logo">Ubhaya</div>
+        <div class="topbar-nav">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search anything...">
+            </div>
+            <a href="#" class="btn btn-icon">🔔</a>
+            <div class="user-menu">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6B46C1, #9333EA); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; flex-shrink: 0;">JD</div>
+                <span>John Doe</span>
+            </div>
+            <a href="login.html" class="btn btn-sm btn-outline">Logout</a>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="index.html">🏠 Dashboard</a></li>
+                <li><a href="facilities.html">🔍 Facilities</a></li>
+                <li><a href="shipments.html">📦 Shipments</a></li>
+                <li><a href="contacts.html">👥 Contacts</a></li>
+                <li><a href="calculator.html">📊 Shipping Calculator</a></li>
+                <li><a href="documents.html" class="active">📁 Documents</a></li>
+                <li><a href="team.html">👨‍👩‍👧‍👦 Team</a></li>
+                <li><a href="#">⚙️ Settings</a></li>
+            </ul>
+
+            <!-- Quick Actions -->
+            <div style="margin-top: 32px; padding: 20px; background: #f3f4f6; border-radius: 12px;">
+                <h4 style="margin-bottom: 16px; color: #374151;">Quick Actions</h4>
+                <button class="btn btn-secondary" style="width: 100%; margin-bottom: 8px;">📝 Notes</button>
+                <button class="btn btn-secondary" style="width: 100%; margin-bottom: 8px;">📄 Convert to PDF</button>
+                <button class="btn btn-secondary" style="width: 100%;">📂 Browse Files</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="mb-xl">
+                <h1>Document Management</h1>
+                <p class="text-muted">Create notes, manage documents, and share files with your team</p>
+            </div>
+
+            <!-- Document Tools -->
+            <div class="document-tools">
+                <div class="tool-card" onclick="showSection('notes')">
+                    <div class="tool-icon">📝</div>
+                    <h3>Notes</h3>
+                    <p class="text-muted">Create simple documents with basic formatting</p>
+                    <button class="btn btn-secondary mt-md">Open Notes</button>
+                </div>
+
+                <div class="tool-card" onclick="showSection('convert')">
+                    <div class="tool-icon">📄</div>
+                    <h3>Convert to PDF</h3>
+                    <p class="text-muted">Convert any document to PDF format</p>
+                    <button class="btn btn-secondary mt-md">Convert Files</button>
+                </div>
+
+                <div class="tool-card" onclick="showSection('browse')">
+                    <div class="tool-icon">📂</div>
+                    <h3>Browse Files</h3>
+                    <p class="text-muted">View all your documents and team files</p>
+                    <button class="btn btn-secondary mt-md">Browse</button>
+                </div>
+            </div>
+
+            <!-- Notes Section -->
+            <div id="notes-section" class="card">
+                <h2 style="margin-bottom: 24px;">📝 Create a Note</h2>
+                <div class="notes-editor">
+                    <div style="margin-bottom: 16px;">
+                        <input type="text" class="form-input" placeholder="Note Title" value="Meeting Notes - December 2, 2024">
+                    </div>
+                    <div class="editor-toolbar">
+                        <button class="editor-btn"><strong>B</strong></button>
+                        <button class="editor-btn"><em>I</em></button>
+                        <button class="editor-btn">📅 Date</button>
+                        <div style="margin-left: auto;">
+                            <span class="text-muted text-small">Auto-saved</span>
+                        </div>
+                    </div>
+                    <div class="editor-content" contenteditable="true">
+                        <p><strong>Date:</strong> December 2, 2024</p>
+                        <p><strong>Attendees:</strong> John Doe, Viola Smith, Raj Kumar</p>
+                        <p><strong>Topics Discussed:</strong></p>
+                        <ul>
+                            <li>Q4 shipment schedule review</li>
+                            <li>New facility partnerships in Singapore</li>
+                            <li>System integration updates</li>
+                            <li>Team expansion plans for 2025</li>
+                        </ul>
+                        <p><strong>Action Items:</strong></p>
+                        <ul>
+                            <li>Follow up with Singapore facility by Dec 5</li>
+                            <li>Prepare Q1 2025 forecast</li>
+                            <li>Schedule technical review meeting</li>
+                        </ul>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <button class="btn btn-primary">Save Note</button>
+                        <button class="btn btn-outline">Share with Team</button>
+                        <button class="btn btn-outline">Export as PDF</button>
+                    </div>
+                </div>
+                <p class="text-muted text-small" style="margin-top: 16px;">
+                    💡 Tip: Keep your notes simple with basic formatting. Documents automatically include the date and can be shared with team members.
+                </p>
+            </div>
+
+            <!-- Convert to PDF Section -->
+            <div id="convert-section" class="card" style="display: none;">
+                <h2 style="margin-bottom: 24px;">📄 Convert to PDF</h2>
+                <div class="file-upload-area">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">📤</div>
+                    <h3 style="margin-bottom: 8px;">Choose file for conversion</h3>
+                    <p class="text-muted" style="margin-bottom: 24px;">Select the file for conversion</p>
+                    <input type="file" id="file-input" style="display: none;">
+                    <button class="btn btn-outline" onclick="document.getElementById('file-input').click()">Choose file</button>
+                    <p class="text-small text-muted mt-md">Supported formats: DOC, DOCX, TXT, XLS, XLSX, PPT, PPTX</p>
+                </div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 24px;">Convert to PDF</button>
+            </div>
+
+            <!-- Browse Files Section -->
+            <div id="browse-section" class="card" style="display: none;">
+                <div class="card-header">
+                    <h2 class="card-title">📂 Browse Files</h2>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-sm btn-outline">My Files</button>
+                        <button class="btn btn-sm btn-primary">Team Files</button>
+                        <button class="btn btn-sm btn-outline">Shared with Me</button>
+                    </div>
+                </div>
+
+                <div class="file-list">
+                    <!-- File Item 1 -->
+                    <div class="file-item">
+                        <div class="file-icon">📄</div>
+                        <div class="file-info">
+                            <div class="file-name">Shipping Invoice Dec 2024.pdf</div>
+                            <div class="file-meta">PDF • 2.4 MB • Uploaded 2 hours ago</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-sm btn-outline">Download</button>
+                            <button class="btn btn-sm btn-outline">Share</button>
+                        </div>
+                    </div>
+
+                    <!-- File Item 2 -->
+                    <div class="file-item">
+                        <div class="file-icon">📝</div>
+                        <div class="file-info">
+                            <div class="file-name">Meeting Notes - December 2</div>
+                            <div class="file-meta">Note • Shared by You • 5 hours ago</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <span class="badge badge-purple">Team</span>
+                            <button class="btn btn-sm btn-outline">Open</button>
+                            <button class="btn btn-sm btn-outline">Share</button>
+                        </div>
+                    </div>
+
+                    <!-- File Item 3 -->
+                    <div class="file-item">
+                        <div class="file-icon">📊</div>
+                        <div class="file-info">
+                            <div class="file-name">Q4 2024 Report.xlsx</div>
+                            <div class="file-meta">Excel • 1.2 MB • Shared by Sarah Chen • Yesterday</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <span class="badge badge-blue">Shared</span>
+                            <button class="btn btn-sm btn-outline">Download</button>
+                            <button class="btn btn-sm btn-outline">Open</button>
+                        </div>
+                    </div>
+
+                    <!-- File Item 4 -->
+                    <div class="file-item">
+                        <div class="file-icon">📑</div>
+                        <div class="file-info">
+                            <div class="file-name">Facility Agreement Template.docx</div>
+                            <div class="file-meta">Word • 856 KB • 3 days ago</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-sm btn-outline">Download</button>
+                            <button class="btn btn-sm btn-outline">Convert to PDF</button>
+                        </div>
+                    </div>
+
+                    <!-- File Item 5 -->
+                    <div class="file-item">
+                        <div class="file-icon">🖼️</div>
+                        <div class="file-info">
+                            <div class="file-name">Warehouse Layout.png</div>
+                            <div class="file-meta">Image • 3.2 MB • Shared by Mike Johnson • Last week</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <span class="badge badge-blue">Shared</span>
+                            <button class="btn btn-sm btn-outline">View</button>
+                            <button class="btn btn-sm btn-outline">Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-muted text-center mt-xl">
+                    Here you can view your notes, documents you created and converted, and also the documents shared by your colleagues internally.
+                </p>
+            </div>
+
+            <!-- Storage Stats -->
+            <div class="card">
+                <h3 style="margin-bottom: 20px;">💾 Storage Usage</h3>
+                <div style="background: #e5e7eb; height: 8px; border-radius: 999px; margin-bottom: 16px;">
+                    <div style="background: linear-gradient(90deg, #6B46C1, #9333EA); width: 35%; height: 100%; border-radius: 999px;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span class="text-muted">3.5 GB used</span>
+                    <span class="text-muted">10 GB total</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('notes-section').style.display = 'none';
+            document.getElementById('convert-section').style.display = 'none';
+            document.getElementById('browse-section').style.display = 'none';
+
+            // Show selected section
+            if (section === 'notes') {
+                document.getElementById('notes-section').style.display = 'block';
+            } else if (section === 'convert') {
+                document.getElementById('convert-section').style.display = 'block';
+            } else if (section === 'browse') {
+                document.getElementById('browse-section').style.display = 'block';
+            }
+        }
+
+        // Show notes section by default
+        showSection('notes');
+    </script>
+</body>
+</html>

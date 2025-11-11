@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubhaya - Contact Management</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        .upload-section {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .upload-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .contact-card-detailed {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+        }
+
+        .contact-card-detailed:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #6B46C1;
+        }
+
+        .contact-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .whatsapp-button {
+            background: #25D366;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .whatsapp-button:hover {
+            background: #128C7E;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="logo">Ubhaya</div>
+        <div class="topbar-nav">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search anything...">
+            </div>
+            <a href="#" class="btn btn-icon">🔔</a>
+            <div class="user-menu">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6B46C1, #9333EA); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; flex-shrink: 0;">JD</div>
+                <span>John Doe</span>
+            </div>
+            <a href="login.html" class="btn btn-sm btn-outline">Logout</a>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="index.html">🏠 Dashboard</a></li>
+                <li><a href="facilities.html">🔍 Facilities</a></li>
+                <li><a href="shipments.html">📦 Shipments</a></li>
+                <li><a href="contacts.html" class="active">👥 Contacts</a></li>
+                <li><a href="calculator.html">📊 Shipping Calculator</a></li>
+                <li><a href="documents.html">📁 Documents</a></li>
+                <li><a href="team.html">👨‍👩‍👧‍👦 Team</a></li>
+                <li><a href="#">⚙️ Settings</a></li>
+            </ul>
+
+            <!-- Upload Contacts Section -->
+            <div style="margin-top: 32px; padding: 20px; background: #f3f4f6; border-radius: 12px;">
+                <h4 style="margin-bottom: 16px; color: #374151;">Upload contacts</h4>
+                <button class="btn btn-whatsapp" style="width: 100%; margin-bottom: 8px;">
+                    💬 Add chats from WhatsApp
+                </button>
+                <button class="btn btn-secondary" style="width: 100%;">
+                    ➕ Create new contact
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="mb-xl">
+                <h1>Contact Management</h1>
+                <p class="text-muted">Manage your personal and team contacts with WhatsApp integration</p>
+            </div>
+
+            <!-- WhatsApp Upload Section -->
+            <div class="upload-section">
+                <h2 style="color: white; margin-bottom: 8px;">📱 Import WhatsApp Contacts</h2>
+                <p style="opacity: 0.95;">Quickly import your WhatsApp chats and contacts to Ubhaya</p>
+                <div class="upload-buttons">
+                    <button class="btn btn-lg" style="background: white; color: #25D366;">
+                        📁 Upload WhatsApp Export
+                    </button>
+                    <button class="btn btn-lg" style="background: white; color: #128C7E;">
+                        ➕ Add Single Contact
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contact Stats -->
+            <div class="grid grid-cols-4 mb-xl">
+                <div class="stat-card">
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Total Contacts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">89</div>
+                    <div class="stat-label">My Contacts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">67</div>
+                    <div class="stat-label">Team Contacts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">With Tasks</div>
+                </div>
+            </div>
+
+            <!-- Tabs and Search Section -->
+            <div class="card">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchContactTab('my')">My Contacts</button>
+                    <button class="tab" onclick="switchContactTab('team')">Team Contacts</button>
+                    <button class="tab" onclick="switchContactTab('company')">Company Contacts</button>
+                </div>
+
+                <!-- Search Bar -->
+                <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+                    <div class="search-bar" style="flex: 1;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="Search contacts by phone number or email or enterprise name...">
+                    </div>
+                    <button class="btn btn-outline">
+                        <span style="color: #25D366; font-weight: bold;">💬</span> WhatsApp
+                    </button>
+                    <button class="btn btn-outline">
+                        📧 Gmail
+                    </button>
+                    <button class="btn btn-primary">
+                        🏢 Company Contacts
+                    </button>
+                </div>
+
+                <!-- My Contacts Tab -->
+                <div id="my-contacts-tab" class="tab-content active">
+                    <div class="contact-grid">
+                        <!-- Contact 1 -->
+                        <div class="contact-card-detailed">
+                            <div class="contact-avatar" style="background: linear-gradient(135deg, #6B46C1, #9333EA);">JD</div>
+                            <div class="contact-info" style="flex: 1;">
+                                <div class="contact-name">John Doe</div>
+                                <div class="contact-company">ABC Logistics</div>
+                                <div class="text-small text-muted">+91 98765 43210</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="whatsapp-button">💬 Chat</button>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="text-small text-muted">ToDo</span>
+                            </div>
+                        </div>
+
+                        <!-- Contact 2 -->
+                        <div class="contact-card-detailed">
+                            <div class="contact-avatar" style="background: linear-gradient(135deg, #2563EB, #1D4ED8);">VS</div>
+                            <div class="contact-info" style="flex: 1;">
+                                <div class="contact-name">Viola Smith</div>
+                                <div class="contact-company">XYZ Shipping</div>
+                                <div class="text-small text-muted">+91 98765 12345</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="whatsapp-button">💬 Chat</button>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="text-small text-muted">ToDo</span>
+                            </div>
+                        </div>
+
+                        <!-- Contact 3 -->
+                        <div class="contact-card-detailed">
+                            <div class="contact-avatar" style="background: linear-gradient(135deg, #22c55e, #16a34a);">RK</div>
+                            <div class="contact-info" style="flex: 1;">
+                                <div class="contact-name">Raj Kumar</div>
+                                <div class="contact-company">Global Freight</div>
+                                <div class="text-small text-muted">+91 98765 67890</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="whatsapp-button">💬 Chat</button>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="text-small text-muted">ToDo</span>
+                            </div>
+                        </div>
+
+                        <!-- Contact 4 -->
+                        <div class="contact-card-detailed">
+                            <div class="contact-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">SC</div>
+                            <div class="contact-info" style="flex: 1;">
+                                <div class="contact-name">Sarah Chen</div>
+                                <div class="contact-company">Express Logistics</div>
+                                <div class="text-small text-muted">+91 98765 11111</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="whatsapp-button">💬 Chat</button>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="text-small text-muted">ToDo</span>
+                            </div>
+                        </div>
+
+                        <!-- Contact 5 -->
+                        <div class="contact-card-detailed">
+                            <div class="contact-avatar" style="background: linear-gradient(135deg, #ef4444, #dc2626);">MJ</div>
+                            <div class="contact-info" style="flex: 1;">
+                                <div class="contact-name">Mike Johnson</div>
+                                <div class="contact-company">Speed Cargo</div>
+                                <div class="text-small text-muted">+91 98765 22222</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="whatsapp-button">💬 Chat</button>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="text-small text-muted">ToDo</span>
+                            </div>
+                        </div>
+
+                        <!-- Contact 6 -->
+                        <div class="contact-card-detailed">
+                            <div class="contact-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">LW</div>
+                            <div class="contact-info" style="flex: 1;">
+                                <div class="contact-name">Lisa Wang</div>
+                                <div class="contact-company">Pacific Shipping</div>
+                                <div class="text-small text-muted">+91 98765 33333</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="whatsapp-button">💬 Chat</button>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="text-small text-muted">ToDo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Contacts Tab -->
+                <div id="team-contacts-tab" class="tab-content">
+                    <div class="contact-grid">
+                        <!-- Team Contact 1 -->
+                        <div class="contact-card-detailed">
+                            <div class="contact-avatar" style="background: linear-gradient(135deg, #6B46C1, #9333EA);">TC</div>
+                            <div class="contact-info" style="flex: 1;">
+                                <div class="contact-name">Team Contact 1</div>
+                                <div class="contact-company">Partner Company A</div>
+                                <div class="text-small text-muted">Shared by Sarah Chen</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="whatsapp-button">💬 Chat</button>
+                                <span class="badge badge-purple">Team</span>
+                            </div>
+                        </div>
+
+                        <!-- Team Contact 2 -->
+                        <div class="contact-card-detailed">
+                            <div class="contact-avatar" style="background: linear-gradient(135deg, #2563EB, #1D4ED8);">TC</div>
+                            <div class="contact-info" style="flex: 1;">
+                                <div class="contact-name">Team Contact 2</div>
+                                <div class="contact-company">Partner Company B</div>
+                                <div class="text-small text-muted">Shared by Mike Johnson</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="whatsapp-button">💬 Chat</button>
+                                <span class="badge badge-purple">Team</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Contacts Tab -->
+                <div id="company-contacts-tab" class="tab-content">
+                    <div style="text-align: center; padding: 48px;">
+                        <h3 style="color: #6b7280; margin-bottom: 16px;">Company Contacts</h3>
+                        <p class="text-muted">Here the phone numbers, email IDs that either the user or their teams have interacted with can be viewed.</p>
+                        <p class="text-muted">The user will have the option to sort them by 'My contacts' and 'Team Contacts'.</p>
+                        <button class="btn btn-primary mt-lg">Import Company Directory</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent WhatsApp Chats -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">💬 Recent WhatsApp Chats</h3>
+                    <button class="btn btn-sm btn-whatsapp">Import More</button>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Contact</th>
+                                <th>Last Message</th>
+                                <th>Time</th>
+                                <th>ToDo Task</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Chat with Viola</strong></td>
+                                <td>Shipment confirmed for tomorrow</td>
+                                <td>2 hours ago</td>
+                                <td>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-whatsapp">Open Chat</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Chat with John</strong></td>
+                                <td>Please check the delivery status</td>
+                                <td>5 hours ago</td>
+                                <td>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-whatsapp">Open Chat</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Chat with Supplier Group</strong></td>
+                                <td>New rates updated for Q1 2025</td>
+                                <td>Yesterday</td>
+                                <td>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-whatsapp">Open Chat</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function switchContactTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab and activate button
+            if (tabName === 'my') {
+                document.getElementById('my-contacts-tab').classList.add('active');
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else if (tabName === 'team') {
+                document.getElementById('team-contacts-tab').classList.add('active');
+                document.querySelectorAll('.tab')[1].classList.add('active');
+            } else {
+                document.getElementById('company-contacts-tab').classList.add('active');
+                document.querySelectorAll('.tab')[2].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

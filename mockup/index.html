@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubhaya - Dashboard</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="logo">Ubhaya</div>
+        <div class="topbar-nav">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search anything...">
+            </div>
+            <a href="#" class="btn btn-icon">🔔</a>
+            <div class="user-menu">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6B46C1, #9333EA); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; flex-shrink: 0;">JD</div>
+                <span>John Doe</span>
+            </div>
+            <a href="login.html" class="btn btn-sm btn-outline">Logout</a>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="index.html" class="active">🏠 Dashboard</a></li>
+                <li><a href="facilities.html">🔍 Facilities</a></li>
+                <li><a href="shipments.html">📦 Shipments</a></li>
+                <li><a href="contacts.html">👥 Contacts</a></li>
+                <li><a href="calculator.html">📊 Shipping Calculator</a></li>
+                <li><a href="documents.html">📁 Documents</a></li>
+                <li><a href="team.html">👨‍👩‍👧‍👦 Team</a></li>
+                <li><a href="#">⚙️ Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="mb-xl">
+                <h1>Welcome back, John!</h1>
+                <p class="text-muted">Here's what's happening with your supply chain today.</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-4 mb-xl">
+                <div class="stat-card">
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Active Shipments</div>
+                    <div class="stat-change positive">↑ 12% from last week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Pending Tasks</div>
+                    <div class="stat-change negative">↓ 3 urgent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Team Contacts</div>
+                    <div class="stat-change positive">↑ 8 new this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">50K+</div>
+                    <div class="stat-label">Facilities Database</div>
+                    <div class="stat-change">Global coverage</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Left Column -->
+                <div>
+                    <!-- Urgent Shipments -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">📦 Urgent Shipments</h3>
+                            <a href="shipments.html" class="btn btn-sm btn-outline">View All</a>
+                        </div>
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Number</th>
+                                        <th>Route</th>
+                                        <th>Status</th>
+                                        <th>Priority</th>
+                                        <th>ETA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>FIG-123</strong></td>
+                                        <td>Philippines to Bangalore</td>
+                                        <td><span class="badge status-delayed">Delayed</span></td>
+                                        <td><span class="badge priority-high">High</span></td>
+                                        <td>Dec 5</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FIG-124</strong></td>
+                                        <td>Mumbai to Chennai</td>
+                                        <td><span class="badge status-on-time">On Time</span></td>
+                                        <td><span class="badge priority-high">High</span></td>
+                                        <td>Dec 3</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FIG-125</strong></td>
+                                        <td>Delhi to Kolkata</td>
+                                        <td><span class="badge status-on-time">On Time</span></td>
+                                        <td><span class="badge priority-normal">Normal</span></td>
+                                        <td>Dec 4</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FIG-126</strong></td>
+                                        <td>Singapore to Bangalore</td>
+                                        <td><span class="badge status-delayed">Delayed</span></td>
+                                        <td><span class="badge priority-high">High</span></td>
+                                        <td>Dec 6</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FIG-127</strong></td>
+                                        <td>Hyderabad to Pune</td>
+                                        <td><span class="badge status-on-time">On Time</span></td>
+                                        <td><span class="badge priority-low">Low</span></td>
+                                        <td>Dec 7</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recent Contacts -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">👥 Recent Contacts</h3>
+                            <a href="contacts.html" class="btn btn-sm btn-outline">View All</a>
+                        </div>
+                        <div>
+                            <div class="contact-card">
+                                <div class="contact-avatar">JD</div>
+                                <div class="contact-info">
+                                    <div class="contact-name">John Doe</div>
+                                    <div class="contact-company">ABC Logistics</div>
+                                </div>
+                                <span class="whatsapp-icon">💬</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="contact-card">
+                                <div class="contact-avatar">VS</div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Viola Smith</div>
+                                    <div class="contact-company">XYZ Shipping</div>
+                                </div>
+                                <span class="whatsapp-icon">💬</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="contact-card">
+                                <div class="contact-avatar">RK</div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Raj Kumar</div>
+                                    <div class="contact-company">Global Freight</div>
+                                </div>
+                                <span class="whatsapp-icon">💬</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Facility Search Quick Access -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🔍 Quick Facility Search</h3>
+                        </div>
+                        <div class="search-bar mb-md">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" class="search-input" placeholder="Search facilities...">
+                            <span class="filter-icon">🔽</span>
+                        </div>
+                        <div class="filter-group">
+                            <select class="form-select">
+                                <option>Location near me</option>
+                                <option>Mumbai</option>
+                                <option>Delhi</option>
+                                <option>Bangalore</option>
+                            </select>
+                            <select class="form-select">
+                                <option>All Countries</option>
+                                <option>India</option>
+                                <option>Philippines</option>
+                                <option>Singapore</option>
+                            </select>
+                            <select class="form-select">
+                                <option>All Categories</option>
+                                <option>Warehouse</option>
+                                <option>Manufacturing</option>
+                                <option>Distribution</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%;">Search Facilities</button>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <h3 class="card-title mb-lg">⚡ Quick Actions</h3>
+                        <div class="quick-actions">
+                            <a href="facilities.html" class="quick-action-btn">
+                                <span class="quick-action-icon">🔍</span>
+                                <span>Search Facilities</span>
+                            </a>
+                            <a href="shipments.html" class="quick-action-btn">
+                                <span class="quick-action-icon">📦</span>
+                                <span>Track Shipment</span>
+                            </a>
+                            <a href="contacts.html" class="quick-action-btn">
+                                <span class="quick-action-icon">➕</span>
+                                <span>Add Contact</span>
+                            </a>
+                            <a href="calculator.html" class="quick-action-btn">
+                                <span class="quick-action-icon">📊</span>
+                                <span>Calculate Shipping</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Team Activity Feed -->
+                    <div class="card activity-feed">
+                        <h3 class="card-title mb-lg">👨‍👩‍👧‍👦 Team Activity</h3>
+                        <div class="activity-item">
+                            <div class="activity-icon">👤</div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>Sarah Chen</strong> added a new facility contact</div>
+                                <div class="activity-time">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">📦</div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>Mike Johnson</strong> updated shipment FIG-123 status</div>
+                                <div class="activity-time">3 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">📄</div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>Lisa Wang</strong> shared a document with the team</div>
+                                <div class="activity-time">5 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">💬</div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>David Lee</strong> imported WhatsApp contacts</div>
+                                <div class="activity-time">Yesterday</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Arrivals -->
+                    <div class="card">
+                        <h3 class="card-title mb-lg">📅 Upcoming Arrivals</h3>
+                        <div style="background: #f8f9fa; border-radius: 8px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                                <strong>Today (Dec 2)</strong>
+                                <span class="badge badge-purple">3 shipments</span>
+                            </div>
+                            <div style="margin-bottom: 8px; padding-left: 16px;">
+                                • FIG-128 - Chennai Port
+                            </div>
+                            <div style="margin-bottom: 8px; padding-left: 16px;">
+                                • FIG-129 - Mumbai Airport
+                            </div>
+                            <div style="margin-bottom: 8px; padding-left: 16px;">
+                                • FIG-130 - Delhi Warehouse
+                            </div>
+                        </div>
+                        <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; margin-top: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                                <strong>Tomorrow (Dec 3)</strong>
+                                <span class="badge badge-blue">5 shipments</span>
+                            </div>
+                            <div style="margin-bottom: 8px; padding-left: 16px;">
+                                • FIG-124 - Chennai Distribution
+                            </div>
+                            <div style="margin-bottom: 8px; padding-left: 16px;">
+                                • FIG-131 - Bangalore Hub
+                            </div>
+                            <div style="margin-bottom: 8px; padding-left: 16px;">
+                                • + 3 more...</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Documents -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">📄 Recent Documents</h3>
+                            <a href="documents.html" class="btn btn-sm btn-outline">View All</a>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: #f8f9fa; border-radius: 8px;">
+                                <span>📄</span>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500;">Shipping Invoice Dec</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">PDF • 2.4 MB</div>
+                                </div>
+                                <span style="font-size: 0.75rem; color: #6b7280;">2h ago</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: #f8f9fa; border-radius: 8px;">
+                                <span>📝</span>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500;">Meeting Notes</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">Note • Shared by Sarah</div>
+                                </div>
+                                <span style="font-size: 0.75rem; color: #6b7280;">5h ago</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: #f8f9fa; border-radius: 8px;">
+                                <span>📊</span>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500;">Q4 Report</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">Excel • 1.2 MB</div>
+                                </div>
+                                <span style="font-size: 0.75rem; color: #6b7280;">1d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/dashboard.js"></script>
+</body>
+</html>
