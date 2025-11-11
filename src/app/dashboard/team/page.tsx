@@ -1,206 +1,232 @@
-import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
-import { mockTeamMembers } from '@/lib/dashboard-data';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Plus, Settings } from 'lucide-react';
-
 /**
  * Team Management Page
- * Manage team members and their permissions
+ * /dashboard/team
  */
-export default function TeamPage() {
-  const getRoleBadgeVariant = (role: string) => {
-    switch (role) {
-      case 'admin':
-        return 'bg-purple-100 text-purple-900 border-purple-200';
-      case 'team-leader':
-        return 'bg-blue-100 text-blue-900 border-blue-200';
-      case 'member':
-        return 'bg-yellow-100 text-yellow-900 border-yellow-200';
-      case 'viewer':
-        return 'bg-gray-100 text-gray-900 border-gray-200';
-      default:
-        return 'bg-gray-100 text-gray-900 border-gray-200';
-    }
-  };
 
-  const stats = [
-    { label: 'Total Members', value: 8 },
-    { label: 'Team Leaders', value: 2 },
-    { label: 'Active Now', value: 5 },
-    { label: 'Shared Resources', value: 156 },
-  ];
+import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import { redirect } from 'next/navigation';
+import { CreateTeamForm } from '@/components/team/create-team-form';
+import { TeamMemberList } from '@/components/team/team-member-list';
+import { InviteMemberForm } from '@/components/team/invite-member-form';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { isTeamLeader } from '@/lib/authorization';
+import { Users, Settings, LogOut } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Team Management - Ubhaya Supply Chain',
+  description: 'Manage your team and collaborate with members',
+};
+
+export default async function TeamPage() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect('/login');
+  }
+
+  // Fetch user with team information
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: {
+      team: {
+        include: {
+          members: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              role: true,
+              avatar: true,
+              createdAt: true,
+              lastLoginAt: true,
+            },
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const canManage = isTeamLeader(session.user.role);
+
+  // If user doesn't have a team, show create team form
+  if (!user.team) {
+    return (
+      <div className="container mx-auto max-w-3xl py-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold">Create Your Team</h1>
+          <p className="text-muted-foreground">
+            Start collaborating by creating a team
+          </p>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Team Information</CardTitle>
+            <CardDescription>
+              Set up your team to start inviting members and sharing resources
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CreateTeamForm />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // User has a team, show team management page
+  const isOwner = user.team.ownerId === session.user.id;
 
   return (
-    <DashboardLayout>
-      {/* Header Section with Stats */}
-      <div className="mb-6 md:mb-8 p-6 rounded-lg bg-gradient-to-r from-purple-600 to-purple-500 text-white">
-        <h1 className="text-3xl font-bold mb-2">Team Management</h1>
-        <p className="opacity-90 mb-6">Manage your team members and their permissions</p>
+    <div className="container mx-auto max-w-6xl py-8">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold">{user.team.name}</h1>
+        <p className="text-muted-foreground">
+          {user.team.description || 'Manage your team and collaborate with members'}
+        </p>
+      </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-2xl md:text-3xl font-bold">{stat.value}</div>
-              <div className="text-xs opacity-90">{stat.label}</div>
+      <div className="space-y-6">
+        {/* Team Stats */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Members</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{user.team.members.length}</div>
+              <p className="text-xs text-muted-foreground">
+                of {user.team.maxMembers} maximum
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Team Slug</CardTitle>
+              <Settings className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-mono">{user.team.slug}</div>
+              <p className="text-xs text-muted-foreground">Unique identifier</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Your Role</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                <Badge variant="outline">
+                  {session.user.role.replace('_', ' ')}
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {isOwner ? 'Team Owner' : 'Team Member'}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Invite Members (Team Leaders Only) */}
+        {canManage && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Invite Team Member</CardTitle>
+              <CardDescription>
+                Add new members to your team to collaborate on resources
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <InviteMemberForm />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Team Members */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Team Members</CardTitle>
+                <CardDescription>
+                  {user.team.members.length} member{user.team.members.length !== 1 ? 's' : ''}
+                </CardDescription>
+              </div>
             </div>
-          ))}
-        </div>
+          </CardHeader>
+          <CardContent>
+            <TeamMemberList
+              members={user.team.members}
+              currentUserId={session.user.id}
+              teamOwnerId={user.team.ownerId}
+              canManage={canManage}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Leave Team */}
+        {!isOwner && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Leave Team</CardTitle>
+              <CardDescription>
+                Remove yourself from this team. You will lose access to all shared resources.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form action="/api/team/leave" method="POST">
+                <Button
+                  type="submit"
+                  variant="destructive"
+                  className="gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Leave Team
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Delete Team (Owner Only) */}
+        {isOwner && user.team.members.length === 1 && (
+          <Card className="border-destructive">
+            <CardHeader>
+              <CardTitle className="text-destructive">Danger Zone</CardTitle>
+              <CardDescription>
+                Delete this team permanently. This action cannot be undone.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form action="/api/team/leave" method="POST">
+                <Button
+                  type="submit"
+                  variant="destructive"
+                  className="gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Delete Team
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        )}
       </div>
-
-      {/* Team Actions */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Team Members</h2>
-        <div className="flex gap-2">
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Invite Member</span>
-          </Button>
-          <Button variant="outline" className="gap-2">
-            <Settings className="h-4 w-4" />
-            <span className="hidden sm:inline">Settings</span>
-          </Button>
-        </div>
-      </div>
-
-      {/* Team Members */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="space-y-3">
-            {mockTeamMembers.map((member) => (
-              <div
-                key={member.id}
-                className={`flex items-center justify-between p-4 rounded-lg border ${
-                  member.name === 'John Doe'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/30'
-                } transition-all`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
-                    style={{ backgroundColor: member.avatarBg }}
-                  >
-                    {member.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold">
-                      {member.name}
-                      {member.name === 'John Doe' && ' (You)'}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {member.role.replace('-', ' ')} • {member.department}
-                    </div>
-                    <div className="flex gap-2 mt-1">
-                      <Badge
-                        className={`capitalize text-xs ${getRoleBadgeVariant(member.role)}`}
-                      >
-                        {member.role.replace('-', ' ')}
-                      </Badge>
-                      <Badge
-                        variant="secondary"
-                        className={`text-xs ${
-                          member.isOnline
-                            ? 'bg-green-100 text-green-900 border-green-200'
-                            : 'bg-gray-100 text-gray-900 border-gray-200'
-                        }`}
-                      >
-                        {member.isOnline ? '🟢 Online' : '⚪ Offline'}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  {member.name !== 'John Doe' && (
-                    <>
-                      <Button size="sm" variant="outline">
-                        View
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        Permissions
-                      </Button>
-                    </>
-                  )}
-                  {member.name === 'John Doe' && (
-                    <Button size="sm" variant="outline">
-                      Edit Profile
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Permissions Overview */}
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>🔐 Role Permissions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              {
-                role: 'Admin',
-                color: 'from-purple-600',
-                permissions: [
-                  '✅ Full Access',
-                  '✅ Manage Team',
-                  '✅ Delete Resources',
-                  '✅ System Settings',
-                ],
-              },
-              {
-                role: 'Team Leader',
-                color: 'from-blue-600',
-                permissions: [
-                  '✅ Create/Edit Resources',
-                  '✅ Share with Team',
-                  '✅ Manage Members',
-                  '❌ System Settings',
-                ],
-              },
-              {
-                role: 'Member',
-                color: 'from-yellow-600',
-                permissions: [
-                  '✅ Create/Edit Own',
-                  '✅ View Shared',
-                  '❌ Manage Members',
-                  '❌ System Settings',
-                ],
-              },
-              {
-                role: 'Viewer',
-                color: 'from-gray-600',
-                permissions: [
-                  '✅ View Only',
-                  '❌ Create/Edit',
-                  '❌ Manage Members',
-                  '❌ System Settings',
-                ],
-              },
-            ].map((roleInfo) => (
-              <div
-                key={roleInfo.role}
-                className="p-4 rounded-lg bg-muted/50 border border-border"
-              >
-                <h4 className={`font-semibold mb-3 ${roleInfo.color}`}>
-                  {roleInfo.role}
-                </h4>
-                <div className="space-y-1 text-sm">
-                  {roleInfo.permissions.map((perm, i) => (
-                    <div key={i}>{perm}</div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </DashboardLayout>
+    </div>
   );
 }
