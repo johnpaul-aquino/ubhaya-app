@@ -170,3 +170,9 @@ playwright/.cache/
 *.tar.gz
 .cache/
 .parcel-cache/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Claude
+CLAUDE.md

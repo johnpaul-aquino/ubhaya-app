@@ -3,9 +3,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
-import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import { Search, Package, UserPlus, Calculator } from 'lucide-react';
+import { Search, UserPlus } from 'lucide-react';
 
 interface QuickAction {
   icon: React.ReactNode;
@@ -28,34 +26,10 @@ const defaultActions: QuickAction[] = [
     color: 'from-blue-500 to-blue-600',
   },
   {
-    icon: <Package className="h-5 w-5" />,
-    label: 'Track Shipment',
-    href: '/dashboard/shipments',
-    color: 'from-purple-500 to-purple-600',
-  },
-  {
     icon: <UserPlus className="h-5 w-5" />,
     label: 'Add Contact',
-    onClick: () => {
-      toast.success('Contact form opened', {
-        description: 'Add a new contact to your network.',
-        action: {
-          label: 'Cancel',
-          onClick: () => console.log('Cancelled'),
-        },
-      });
-    },
+    href: '/dashboard/contacts',
     color: 'from-green-500 to-green-600',
-  },
-  {
-    icon: <Calculator className="h-5 w-5" />,
-    label: 'Calculate Shipping',
-    onClick: () => {
-      toast.info('Calculator loading...', {
-        description: 'Preparing shipping cost calculator.',
-      });
-    },
-    color: 'from-orange-500 to-orange-600',
   },
 ];
 

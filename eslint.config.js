@@ -8,7 +8,7 @@ import prettierConfig from 'eslint-config-prettier';
 import typescriptParser from '@typescript-eslint/parser';
 import typescriptPlugin from '@typescript-eslint/eslint-plugin';
 
-export default [
+const eslintConfig = [
   ...next,
   ...nextCoreWebVitals,
   ...nextTypescript,
@@ -72,14 +72,38 @@ export default [
     },
   },
   {
-    files: ['**/*.{test,spec}.{js,jsx,ts,tsx}'],
+    files: ['**/*.{test,spec}.{js,jsx,ts,tsx}', 'jest.setup.js', 'jest.config.js'],
+    languageOptions: {
+      globals: {
+        jest: 'readonly',
+        expect: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+      },
+    },
     rules: {
       'no-console': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
   prettierConfig,
   {
-    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts"]
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+      "jest.config.js",
+      "jest.setup.js"
+    ]
   }
 ];
+
+export default eslintConfig;

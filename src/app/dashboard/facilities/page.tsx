@@ -1,56 +1,163 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin, Building2, Package } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
+import { FacilityCard } from '@/components/dashboard/facility-card';
+import { FacilityRow } from '@/components/dashboard/facility-row';
+import { FacilityDetailDrawer } from '@/components/dashboard/facility-detail-drawer';
+import type { Facility, FacilitiesResponse } from '@/types/dashboard';
+import {
+  Search,
+  LayoutGrid,
+  List,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Database,
+} from 'lucide-react';
 
 /**
  * Facilities Page
- * Search and manage facilities database
+ * Search and browse 4,850+ facilities
  */
 export default function FacilitiesPage() {
-  const facilities = [
-    {
-      id: '1',
-      name: 'Mumbai Warehouse',
-      location: 'Mumbai, India',
-      type: 'Warehouse',
-      capacity: '10,000 units',
-      status: 'Active',
-    },
-    {
-      id: '2',
-      name: 'Delhi Distribution Center',
-      location: 'Delhi, India',
-      type: 'Distribution',
-      capacity: '5,000 units',
-      status: 'Active',
-    },
-    {
-      id: '3',
-      name: 'Bangalore Manufacturing',
-      location: 'Bangalore, India',
-      type: 'Manufacturing',
-      capacity: '3,000 units',
-      status: 'Active',
-    },
-    {
-      id: '4',
-      name: 'Chennai Port Facility',
-      location: 'Chennai, India',
-      type: 'Port',
-      capacity: '15,000 units',
-      status: 'Active',
-    },
-  ];
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // State
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [countries, setCountries] = useState<
+    { code: string; name: string; count: number }[]
+  >([]);
+  const [sectors, setSectors] = useState<{ name: string; count: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 20,
+    total: 0,
+    totalPages: 0,
+  });
+
+  // Filter state from URL
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [country, setCountry] = useState(searchParams.get('country') || '');
+  const [sector, setSector] = useState(searchParams.get('sector') || '');
+  const [page, setPage] = useState(
+    parseInt(searchParams.get('page') || '1', 10)
+  );
+
+  // View state (grid or list)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('facilitiesViewMode') as 'grid' | 'list') || 'grid';
+    }
+    return 'grid';
+  });
+
+  // Detail drawer state
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
+    null
+  );
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Debounced search
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Fetch facilities
+  const fetchFacilities = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (debouncedSearch) params.set('search', debouncedSearch);
+      if (country) params.set('country', country);
+      if (sector) params.set('sector', sector);
+      params.set('page', page.toString());
+      params.set('pageSize', '20');
+
+      const response = await fetch(`/api/facilities?${params.toString()}`);
+      const data: FacilitiesResponse = await response.json();
+
+      if (data.success) {
+        setFacilities(data.facilities);
+        setPagination(data.pagination);
+        setCountries(data.filters.countries);
+        setSectors(data.filters.sectors);
+      }
+    } catch (error) {
+      console.error('Failed to fetch facilities:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [debouncedSearch, country, sector, page]);
+
+  useEffect(() => {
+    fetchFacilities();
+  }, [fetchFacilities]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (debouncedSearch) params.set('search', debouncedSearch);
+    if (country) params.set('country', country);
+    if (sector) params.set('sector', sector);
+    if (page > 1) params.set('page', page.toString());
+
+    const newUrl = params.toString()
+      ? `?${params.toString()}`
+      : '/dashboard/facilities';
+    router.replace(newUrl, { scroll: false });
+  }, [debouncedSearch, country, sector, page, router]);
+
+  // Save view mode to localStorage
+  useEffect(() => {
+    localStorage.setItem('facilitiesViewMode', viewMode);
+  }, [viewMode]);
+
+  // Handle facility click
+  const handleFacilityClick = (facility: Facility) => {
+    setSelectedFacility(facility);
+    setDrawerOpen(true);
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearch('');
+    setCountry('');
+    setSector('');
+    setPage(1);
+  };
+
+  const hasFilters = search || country || sector;
 
   return (
     <DashboardLayout>
       {/* Page Header */}
       <div className="mb-6 md:mb-8">
-        <h1 className="text-3xl font-bold mb-2">🔍 Facilities</h1>
+        <div className="flex items-center gap-3 mb-2">
+          <Database className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-bold">Facilities Database</h1>
+        </div>
         <p className="text-muted-foreground">
-          Search and manage facilities in our global database
+          Search from {pagination.total.toLocaleString()} global facilities
         </p>
       </div>
 
@@ -58,117 +165,189 @@ export default function FacilitiesPage() {
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="space-y-4">
+            {/* Search Input */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search facilities by name, location, or type..."
+                placeholder="Search facilities by name or address..."
                 className="pl-9"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <select className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
-                <option>Location near me</option>
-                <option>Mumbai</option>
-                <option>Delhi</option>
-                <option>Bangalore</option>
-                <option>Chennai</option>
-              </select>
+            {/* Filters Row */}
+            <div className="flex flex-wrap gap-3 items-center">
+              {/* Country Filter */}
+              <Select
+                value={country}
+                onValueChange={(value) => {
+                  setCountry(value === 'all' ? '' : value);
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="All Countries" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Countries</SelectItem>
+                  {countries.map((c) => (
+                    <SelectItem key={c.code} value={c.code}>
+                      {c.name} ({c.count.toLocaleString()})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-              <select className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
-                <option>All Countries</option>
-                <option>India</option>
-                <option>Philippines</option>
-                <option>Singapore</option>
-                <option>Thailand</option>
-              </select>
+              {/* Sector Filter */}
+              <Select
+                value={sector}
+                onValueChange={(value) => {
+                  setSector(value === 'all' ? '' : value);
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="All Sectors" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sectors</SelectItem>
+                  {sectors.map((s) => (
+                    <SelectItem key={s.name} value={s.name}>
+                      {s.name} ({s.count.toLocaleString()})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-              <select className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
-                <option>All Categories</option>
-                <option>Warehouse</option>
-                <option>Manufacturing</option>
-                <option>Distribution</option>
-                <option>Port</option>
-              </select>
+              {/* View Toggle */}
+              <div className="flex items-center gap-1 ml-auto">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  size="icon"
+                  className="h-9 w-9"
+                  onClick={() => setViewMode('grid')}
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'outline'}
+                  size="icon"
+                  className="h-9 w-9"
+                  onClick={() => setViewMode('list')}
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
-            <Button className="w-full">Search Facilities</Button>
+            {/* Results Info & Clear */}
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">
+                Showing{' '}
+                {Math.min((page - 1) * 20 + 1, pagination.total).toLocaleString()}
+                -{Math.min(page * 20, pagination.total).toLocaleString()} of{' '}
+                {pagination.total.toLocaleString()} results
+              </span>
+              {hasFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="text-muted-foreground"
+                >
+                  <X className="h-3.5 w-3.5 mr-1" />
+                  Clear filters
+                </Button>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Facilities Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {facilities.map((facility) => (
-          <Card key={facility.id} className="hover:border-primary/30 transition-all">
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-semibold text-lg">{facility.name}</h3>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {facility.location}
-                    </div>
-                  </div>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-900 border border-green-200">
-                    {facility.status}
-                  </span>
-                </div>
+      {/* Results */}
+      {loading ? (
+        <div
+          className={
+            viewMode === 'grid'
+              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+              : 'space-y-2'
+          }
+        >
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              className={viewMode === 'grid' ? 'h-52' : 'h-16'}
+            />
+          ))}
+        </div>
+      ) : facilities.length === 0 ? (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">
+              No facilities found. Try adjusting your search or filters.
+            </p>
+          </CardContent>
+        </Card>
+      ) : viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {facilities.map((facility) => (
+            <FacilityCard
+              key={facility.id}
+              facility={facility}
+              onClick={handleFacilityClick}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {facilities.map((facility) => (
+            <FacilityRow
+              key={facility.id}
+              facility={facility}
+              onClick={handleFacilityClick}
+            />
+          ))}
+        </div>
+      )}
 
-                {/* Details Grid */}
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <p className="text-muted-foreground text-xs">Type</p>
-                    <p className="font-medium flex items-center gap-1 mt-0.5">
-                      <Building2 className="h-4 w-4" />
-                      {facility.type}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground text-xs">Capacity</p>
-                    <p className="font-medium flex items-center gap-1 mt-0.5">
-                      <Package className="h-4 w-4" />
-                      {facility.capacity}
-                    </p>
-                  </div>
-                </div>
+      {/* Pagination */}
+      {pagination.totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-6">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Previous
+          </Button>
+          <span className="text-sm text-muted-foreground px-4">
+            Page {page} of {pagination.totalPages.toLocaleString()}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === pagination.totalPages}
+            onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
+          >
+            Next
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+      )}
 
-                {/* Actions */}
-                <div className="flex gap-2 pt-2 border-t border-border">
-                  <Button size="sm" className="flex-1">
-                    View Details
-                  </Button>
-                  <Button size="sm" variant="outline" className="flex-1">
-                    Contact
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Stats */}
-      <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: 'Total Facilities', value: '50K+' },
-          { label: 'In Network', value: '234' },
-          { label: 'Countries', value: '45' },
-          { label: 'Global Coverage', value: '99%' },
-        ].map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <div className="text-xs text-muted-foreground">{stat.label}</div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Detail Drawer */}
+      <FacilityDetailDrawer
+        facility={selectedFacility}
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </DashboardLayout>
   );
 }

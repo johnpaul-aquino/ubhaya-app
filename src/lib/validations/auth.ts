@@ -47,6 +47,11 @@ export const registerSchema = z
           message: 'Invalid phone number format (use +1234567890)',
         }
       ),
+
+    address: z
+      .string()
+      .max(500, 'Address must be less than 500 characters')
+      .optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",

@@ -96,9 +96,9 @@
     --sidebar-ring: oklch(0.5547 0.2503 297.0156);
 
     /* Typography */
-    --font-sans: Montserrat, sans-serif;
+    --font-sans: Inter, sans-serif;
     --font-serif: Georgia, serif;
-    --font-mono: Fira Code, monospace;
+    --font-mono: ui-monospace, monospace;
 
     /* Radius and spacing */
     --radius: 0.35rem;
@@ -388,9 +388,9 @@
     --sidebar-ring: oklch(0.7871 0.1187 304.7693);
 
     /* Typography - same as light theme */
-    --font-sans: Montserrat, sans-serif;
+    --font-sans: Inter, sans-serif;
     --font-serif: Georgia, serif;
-    --font-mono: Fira Code, monospace;
+    --font-mono: ui-monospace, monospace;
 
     /* ===== DARK MODE PROFESSIONAL COLOR SYSTEM ===== */
 
@@ -562,19 +562,12 @@
     color: var(--foreground);
     font-family: var(--font-sans);
     /* Enhanced font features for better typography */
-    font-feature-settings: 
+    font-feature-settings:
       "rlig" 1,     /* Required ligatures */
       "calt" 1,     /* Contextual alternates */
       "kern" 1,     /* Kerning */
       "liga" 1,     /* Standard ligatures */
-      "clig" 1,     /* Contextual ligatures */
-      "case" 1,     /* Case-sensitive forms */
-      "cpsp" 1,     /* Capital spacing */
-      "frac" 1,     /* Fractions */
-      "numr" 1,     /* Numerators */
-      "dnom" 1,     /* Denominators */
-      "tnum" 0,     /* Tabular numbers (disabled by default) */
-      "zero" 1;     /* Slashed zero */
+      "clig" 1;     /* Contextual ligatures */
 
     /* Improved text selection */
     ::selection {

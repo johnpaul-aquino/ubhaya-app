@@ -24,7 +24,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
-export function CreateTeamForm() {
+interface CreateTeamFormProps {
+  onSuccess?: () => void;
+}
+
+export function CreateTeamForm({ onSuccess }: CreateTeamFormProps) {
   const router = useRouter();
 
   const form = useForm<CreateTeamInput>({
@@ -61,7 +65,7 @@ export function CreateTeamForm() {
       }
 
       toast.success('Team created successfully!');
-      router.push('/dashboard/team');
+      onSuccess?.();
       router.refresh();
     } catch (error) {
       console.error('Create team error:', error);

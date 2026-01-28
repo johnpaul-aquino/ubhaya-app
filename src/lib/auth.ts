@@ -8,7 +8,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from './prisma';
 import bcrypt from 'bcryptjs';
-import type { UserRole } from '@prisma/client';
+import type { UserRole, OrgRole } from '@prisma/client';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -34,7 +34,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
-          include: { team: true },
+          include: {
+            teamMemberships: {
+              include: { team: true },
+              take: 1, // Get first team for backwards compatibility
+            },
+            organizationMemberships: {
+              include: { organization: true },
+              take: 1, // Get first organization for backwards compatibility
+            },
+          },
         });
 
         if (!user || !user.isActive) {
@@ -56,13 +65,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           data: { lastLoginAt: new Date() },
         });
 
+        // Get first team ID for backwards compatibility
+        const teamId = user.teamMemberships.length > 0
+          ? user.teamMemberships[0].teamId
+          : null;
+
+        // Get first organization for backwards compatibility
+        const orgMembership = user.organizationMemberships.length > 0
+          ? user.organizationMemberships[0]
+          : null;
+
         return {
           id: user.id,
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
-          teamId: user.teamId,
+          teamId: teamId,
+          organizationId: orgMembership?.organizationId || null,
+          orgRole: orgMembership?.orgRole || null,
         };
       },
     }),
@@ -73,6 +94,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.role = user.role as UserRole;
         token.teamId = user.teamId as string | null;
+        token.organizationId = user.organizationId as string | null;
+        token.orgRole = user.orgRole as OrgRole | null;
         token.firstName = user.firstName as string;
         token.lastName = user.lastName as string;
       }
@@ -83,6 +106,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = token.id as string;
         session.user.role = token.role as UserRole;
         session.user.teamId = token.teamId as string | null;
+        session.user.organizationId = token.organizationId as string | null;
+        session.user.orgRole = token.orgRole as OrgRole | null;
         session.user.firstName = token.firstName as string;
         session.user.lastName = token.lastName as string;
       }

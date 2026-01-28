@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { firstName, lastName, email, password, whatsappNumber } =
+    const { firstName, lastName, email, password, whatsappNumber, address } =
       validationResult.data;
 
     // Check if user already exists
@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
         email: email.toLowerCase(),
         passwordHash,
         whatsappNumber,
+        address,
       },
       select: {
         id: true,

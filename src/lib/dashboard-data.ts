@@ -4,62 +4,12 @@
  */
 
 import type {
-  Shipment,
   Contact,
   TeamMember,
   ActivityItem,
   UpcomingArrival,
   Document,
 } from '@/types/dashboard';
-
-// Mock Shipments Data
-export const mockShipments: Shipment[] = [
-  {
-    id: '1',
-    number: 'FIG-123',
-    route: 'Philippines to Bangalore',
-    status: 'delayed',
-    priority: 'high',
-    eta: 'Dec 5',
-    updatedAt: '2 hours ago',
-  },
-  {
-    id: '2',
-    number: 'FIG-124',
-    route: 'Mumbai to Chennai',
-    status: 'on-time',
-    priority: 'high',
-    eta: 'Dec 3',
-    updatedAt: '1 hour ago',
-  },
-  {
-    id: '3',
-    number: 'FIG-125',
-    route: 'Delhi to Kolkata',
-    status: 'on-time',
-    priority: 'normal',
-    eta: 'Dec 4',
-    updatedAt: '30 minutes ago',
-  },
-  {
-    id: '4',
-    number: 'FIG-126',
-    route: 'Singapore to Bangalore',
-    status: 'delayed',
-    priority: 'high',
-    eta: 'Dec 6',
-    updatedAt: '3 hours ago',
-  },
-  {
-    id: '5',
-    number: 'FIG-127',
-    route: 'Hyderabad to Pune',
-    status: 'on-time',
-    priority: 'low',
-    eta: 'Dec 7',
-    updatedAt: '5 hours ago',
-  },
-];
 
 // Mock Contacts Data
 export const mockContacts: Contact[] = [

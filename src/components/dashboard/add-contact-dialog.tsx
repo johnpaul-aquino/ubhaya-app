@@ -13,13 +13,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { UserPlus, Phone, Mail, Building, Globe, FileText } from 'lucide-react';
+import { UserPlus, Phone, Mail, Building, Globe, Briefcase, MapPin } from 'lucide-react';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
+import type { Contact } from '@/types/dashboard';
 
 interface AddContactDialogProps {
-  onAddContact?: (contact: any) => void;
+  onAddContact?: (contact: Contact) => void;
   trigger?: React.ReactNode;
 }
 
@@ -33,11 +34,13 @@ export function AddContactDialog({ onAddContact, trigger }: AddContactDialogProp
   const [formData, setFormData] = useState({
     name: '',
     company: '',
+    position: '',
     email: '',
     phone: '',
-    whatsapp: '',
+    whatsappNumber: '',
     website: '',
-    notes: '',
+    address: '',
+    isTeamContact: false,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,49 +48,62 @@ export function AddContactDialog({ onAddContact, trigger }: AddContactDialogProp
     setIsSubmitting(true);
 
     // Validate required fields
-    if (!formData.name || !formData.email) {
+    if (!formData.name) {
       toast.error('Please fill in required fields', {
-        description: 'Name and email are required.',
+        description: 'Name is required.',
       });
       setIsSubmitting(false);
       return;
     }
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const response = await fetch('/api/contacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    // Call parent callback if provided
-    onAddContact?.({
-      ...formData,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    });
+      const data = await response.json();
 
-    // Show success message
-    toast.success('Contact added successfully!', {
-      description: `${formData.name} has been added to your contacts.`,
-      action: {
-        label: 'View',
-        onClick: () => console.log('View contact'),
-      },
-    });
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to create contact');
+      }
 
-    // Reset form and close dialog
-    setFormData({
-      name: '',
-      company: '',
-      email: '',
-      phone: '',
-      whatsapp: '',
-      website: '',
-      notes: '',
-    });
-    setIsSubmitting(false);
-    setOpen(false);
+      // Call parent callback with the new contact
+      onAddContact?.(data.contact);
+
+      // Show success message
+      toast.success('Contact added successfully!', {
+        description: `${formData.name} has been added to your contacts.`,
+      });
+
+      // Reset form and close dialog
+      setFormData({
+        name: '',
+        company: '',
+        position: '',
+        email: '',
+        phone: '',
+        whatsappNumber: '',
+        website: '',
+        address: '',
+        isTeamContact: false,
+      });
+      setOpen(false);
+    } catch (error) {
+      console.error('Create contact error:', error);
+      toast.error('Failed to create contact', {
+        description: error instanceof Error ? error.message : 'Please try again.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -106,7 +122,7 @@ export function AddContactDialog({ onAddContact, trigger }: AddContactDialogProp
           </ShimmerButton>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -151,11 +167,27 @@ export function AddContactDialog({ onAddContact, trigger }: AddContactDialogProp
               />
             </div>
 
+            {/* Position Field */}
+            <div className="grid gap-2">
+              <Label htmlFor="position" className="flex items-center gap-2">
+                <Briefcase className="h-3 w-3" />
+                Position
+              </Label>
+              <Input
+                id="position"
+                name="position"
+                placeholder="Sales Manager"
+                value={formData.position}
+                onChange={handleInputChange}
+                disabled={isSubmitting}
+              />
+            </div>
+
             {/* Email Field */}
             <div className="grid gap-2">
               <Label htmlFor="email" className="flex items-center gap-2">
                 <Mail className="h-3 w-3" />
-                Email <span className="text-destructive">*</span>
+                Email
               </Label>
               <Input
                 id="email"
@@ -164,7 +196,6 @@ export function AddContactDialog({ onAddContact, trigger }: AddContactDialogProp
                 placeholder="john@example.com"
                 value={formData.email}
                 onChange={handleInputChange}
-                required
                 disabled={isSubmitting}
               />
             </div>
@@ -188,15 +219,15 @@ export function AddContactDialog({ onAddContact, trigger }: AddContactDialogProp
 
             {/* WhatsApp Field */}
             <div className="grid gap-2">
-              <Label htmlFor="whatsapp">
+              <Label htmlFor="whatsappNumber">
                 WhatsApp Number
               </Label>
               <Input
-                id="whatsapp"
-                name="whatsapp"
+                id="whatsappNumber"
+                name="whatsappNumber"
                 type="tel"
                 placeholder="+1 234 567 8900"
-                value={formData.whatsapp}
+                value={formData.whatsappNumber}
                 onChange={handleInputChange}
                 disabled={isSubmitting}
               />
@@ -219,20 +250,37 @@ export function AddContactDialog({ onAddContact, trigger }: AddContactDialogProp
               />
             </div>
 
-            {/* Notes Field */}
+            {/* Address Field */}
             <div className="grid gap-2">
-              <Label htmlFor="notes" className="flex items-center gap-2">
-                <FileText className="h-3 w-3" />
-                Notes
+              <Label htmlFor="address" className="flex items-center gap-2">
+                <MapPin className="h-3 w-3" />
+                Address
               </Label>
-              <Textarea
-                id="notes"
-                name="notes"
-                placeholder="Additional notes about this contact..."
-                value={formData.notes}
+              <Input
+                id="address"
+                name="address"
+                placeholder="123 Business St, City"
+                value={formData.address}
                 onChange={handleInputChange}
                 disabled={isSubmitting}
-                rows={3}
+              />
+            </div>
+
+            {/* Team Contact Toggle */}
+            <div className="flex items-center justify-between rounded-lg border p-3">
+              <div className="space-y-0.5">
+                <Label htmlFor="isTeamContact">Share with Team</Label>
+                <p className="text-xs text-muted-foreground">
+                  Make this contact visible to your team members
+                </p>
+              </div>
+              <Switch
+                id="isTeamContact"
+                checked={formData.isTeamContact}
+                onCheckedChange={(checked) =>
+                  setFormData(prev => ({ ...prev, isTeamContact: checked }))
+                }
+                disabled={isSubmitting}
               />
             </div>
           </div>

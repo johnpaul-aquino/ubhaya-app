@@ -10,7 +10,18 @@ export { StatCard } from './stat-card';
 export { ActivityFeed } from './activity-feed';
 export { ContactCard } from './contact-card';
 export { QuickActions } from './quick-actions';
-export { ShipmentsTable } from './shipments-table';
+
+// Document Components
+export { UploadDocumentDialog } from './upload-document-dialog';
+export { CreateNoteDialog } from './create-note-dialog';
+export { DocumentCard } from './document-card';
+export { ShareDocumentDialog } from './share-document-dialog';
+
+// Comment Components
+export { CommentSection } from './comment-section';
+export { CommentThread } from './comment-thread';
+export { CommentInput } from './comment-input';
+export { MentionAutocomplete } from './mention-autocomplete';
 
 // Skeleton Loaders
 export {

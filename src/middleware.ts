@@ -18,7 +18,9 @@ const authRoutes = ['/login', '/register', '/forgot-password', '/reset-password'
 const adminRoutes = ['/dashboard/admin'];
 
 // Define team leader routes (team leader or admin can access)
-const teamLeaderRoutes = ['/dashboard/team'];
+// Note: /dashboard/team is accessible to all authenticated users
+// Team management features within the page handle role-based permissions
+const teamLeaderRoutes: string[] = [];
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

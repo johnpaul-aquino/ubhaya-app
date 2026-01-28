@@ -3,7 +3,7 @@
  * Extends the default NextAuth types to include our custom user fields
  */
 
-import { UserRole } from '@prisma/client';
+import { UserRole, OrgRole } from '@prisma/client';
 import NextAuth, { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
@@ -12,6 +12,8 @@ declare module 'next-auth' {
       id: string;
       role: UserRole;
       teamId: string | null;
+      organizationId: string | null;
+      orgRole: OrgRole | null;
       firstName: string;
       lastName: string;
     } & DefaultSession['user'];
@@ -21,6 +23,8 @@ declare module 'next-auth' {
     id: string;
     role: UserRole;
     teamId?: string | null;
+    organizationId?: string | null;
+    orgRole?: OrgRole | null;
     firstName: string;
     lastName: string;
   }
@@ -31,6 +35,8 @@ declare module 'next-auth/jwt' {
     id: string;
     role: UserRole;
     teamId: string | null;
+    organizationId: string | null;
+    orgRole: OrgRole | null;
     firstName: string;
     lastName: string;
   }

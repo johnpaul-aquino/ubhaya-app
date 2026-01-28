@@ -34,17 +34,22 @@ export async function GET(request: NextRequest) {
         whatsappNumber: true,
         avatar: true,
         role: true,
-        teamId: true,
         createdAt: true,
         lastLoginAt: true,
-        team: {
+        teamMemberships: {
           select: {
-            id: true,
-            name: true,
-            slug: true,
-            description: true,
-            avatar: true,
+            teamRole: true,
+            team: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                description: true,
+                avatar: true,
+              },
+            },
           },
+          take: 1, // Get the first team membership
         },
       },
     });
@@ -56,9 +61,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Transform teamMemberships to a single team object for frontend compatibility
+    const { teamMemberships, ...userData } = user;
+    const team = teamMemberships.length > 0 ? teamMemberships[0].team : null;
+
     return NextResponse.json({
       success: true,
-      user,
+      user: {
+        ...userData,
+        team,
+      },
     });
   } catch (error) {
     console.error('Get profile error:', error);

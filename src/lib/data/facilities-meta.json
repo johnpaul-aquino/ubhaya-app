@@ -1,0 +1,576 @@
+{
+  "countries": [
+    {
+      "code": "IN",
+      "name": "India",
+      "count": 4110
+    },
+    {
+      "code": "US",
+      "name": "United States",
+      "count": 568
+    },
+    {
+      "code": "BR",
+      "name": "Brazil",
+      "count": 44
+    },
+    {
+      "code": "BD",
+      "name": "Bangladesh",
+      "count": 35
+    },
+    {
+      "code": "MX",
+      "name": "Mexico",
+      "count": 34
+    },
+    {
+      "code": "CN",
+      "name": "China",
+      "count": 22
+    },
+    {
+      "code": "CA",
+      "name": "Canada",
+      "count": 13
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom",
+      "count": 3
+    },
+    {
+      "code": "ID",
+      "name": "Indonesia",
+      "count": 2
+    },
+    {
+      "code": "SE",
+      "name": "Sweden",
+      "count": 2
+    },
+    {
+      "code": "TN",
+      "name": "Tunisia",
+      "count": 2
+    },
+    {
+      "code": "AU",
+      "name": "Australia",
+      "count": 1
+    },
+    {
+      "code": "BB",
+      "name": "Barbados",
+      "count": 1
+    },
+    {
+      "code": "CO",
+      "name": "Colombia",
+      "count": 1
+    },
+    {
+      "code": "DK",
+      "name": "Denmark",
+      "count": 1
+    },
+    {
+      "code": "FJ",
+      "name": "Fiji",
+      "count": 1
+    },
+    {
+      "code": "GY",
+      "name": "Guyana",
+      "count": 1
+    },
+    {
+      "code": "HK",
+      "name": "Hong Kong",
+      "count": 1
+    },
+    {
+      "code": "IT",
+      "name": "Italy",
+      "count": 1
+    },
+    {
+      "code": "JO",
+      "name": "Jordan",
+      "count": 1
+    },
+    {
+      "code": "KR",
+      "name": "Korea, Republic of",
+      "count": 1
+    },
+    {
+      "code": "MG",
+      "name": "Madagascar",
+      "count": 1
+    },
+    {
+      "code": "SC",
+      "name": "Seychelles",
+      "count": 1
+    },
+    {
+      "code": "TW",
+      "name": "Taiwan",
+      "count": 1
+    },
+    {
+      "code": "VN",
+      "name": "Vietnam",
+      "count": 1
+    }
+  ],
+  "sectors": [
+    {
+      "name": "Apparel",
+      "count": 822
+    },
+    {
+      "name": "Food",
+      "count": 731
+    },
+    {
+      "name": "Manufacturing",
+      "count": 703
+    },
+    {
+      "name": "Unspecified",
+      "count": 576
+    },
+    {
+      "name": "Machinery Manufacturing",
+      "count": 527
+    },
+    {
+      "name": "Equipment",
+      "count": 516
+    },
+    {
+      "name": "Consumer Products",
+      "count": 506
+    },
+    {
+      "name": "Agriculture",
+      "count": 472
+    },
+    {
+      "name": "Food Manufacturing",
+      "count": 470
+    },
+    {
+      "name": "Food Industry",
+      "count": 405
+    },
+    {
+      "name": "Textiles",
+      "count": 323
+    },
+    {
+      "name": "Food & Beverage",
+      "count": 299
+    },
+    {
+      "name": "Government Registry",
+      "count": 260
+    },
+    {
+      "name": "Farming",
+      "count": 243
+    },
+    {
+      "name": "Home",
+      "count": 205
+    },
+    {
+      "name": "Commodities",
+      "count": 189
+    },
+    {
+      "name": "Wholesale Trade",
+      "count": 181
+    },
+    {
+      "name": "General Merchandise",
+      "count": 175
+    },
+    {
+      "name": "Home Accessories",
+      "count": 140
+    },
+    {
+      "name": "Beverages",
+      "count": 132
+    },
+    {
+      "name": "Crop Production",
+      "count": 124
+    },
+    {
+      "name": "Health",
+      "count": 118
+    },
+    {
+      "name": "Wood Products",
+      "count": 117
+    },
+    {
+      "name": "Paper Products",
+      "count": 103
+    },
+    {
+      "name": "Apparel Accessories",
+      "count": 102
+    },
+    {
+      "name": "Automotive",
+      "count": 96
+    },
+    {
+      "name": "Arts",
+      "count": 96
+    },
+    {
+      "name": "Chemicals",
+      "count": 91
+    },
+    {
+      "name": "Healthcare",
+      "count": 89
+    },
+    {
+      "name": "Waste Management",
+      "count": 86
+    },
+    {
+      "name": "Furniture",
+      "count": 85
+    },
+    {
+      "name": "Animal Production",
+      "count": 75
+    },
+    {
+      "name": "Forestry",
+      "count": 74
+    },
+    {
+      "name": "Utilities",
+      "count": 73
+    },
+    {
+      "name": "Energy Production & Utilities",
+      "count": 71
+    },
+    {
+      "name": "Printing",
+      "count": 70
+    },
+    {
+      "name": "Home Furnishings",
+      "count": 70
+    },
+    {
+      "name": "Metal Manufacturing",
+      "count": 62
+    },
+    {
+      "name": "Pharmaceuticals",
+      "count": 56
+    },
+    {
+      "name": "Electronics",
+      "count": 50
+    },
+    {
+      "name": "Aquaculture",
+      "count": 48
+    },
+    {
+      "name": "Leather",
+      "count": 44
+    },
+    {
+      "name": "Energy",
+      "count": 40
+    },
+    {
+      "name": "Building Construction",
+      "count": 40
+    },
+    {
+      "name": "Automotive Parts",
+      "count": 33
+    },
+    {
+      "name": "Repair",
+      "count": 32
+    },
+    {
+      "name": "Plastics",
+      "count": 31
+    },
+    {
+      "name": "Nondurable Goods",
+      "count": 31
+    },
+    {
+      "name": "Medical Equipment & Services",
+      "count": 29
+    },
+    {
+      "name": "Building Materials",
+      "count": 27
+    },
+    {
+      "name": "Technical And Scientific Activities",
+      "count": 26
+    },
+    {
+      "name": "Mining",
+      "count": 26
+    },
+    {
+      "name": "Footwear",
+      "count": 24
+    },
+    {
+      "name": "Home Textiles",
+      "count": 24
+    },
+    {
+      "name": "Components",
+      "count": 22
+    },
+    {
+      "name": "Quarrying",
+      "count": 22
+    },
+    {
+      "name": "Storage",
+      "count": 21
+    },
+    {
+      "name": "Construction",
+      "count": 21
+    },
+    {
+      "name": "Warehousing",
+      "count": 20
+    },
+    {
+      "name": "Aerospace",
+      "count": 20
+    },
+    {
+      "name": "Professional Services",
+      "count": 19
+    },
+    {
+      "name": "Rail Transportation",
+      "count": 17
+    },
+    {
+      "name": "Material Production",
+      "count": 17
+    },
+    {
+      "name": "Toys",
+      "count": 14
+    },
+    {
+      "name": "Electronic Product Manufacturing",
+      "count": 14
+    },
+    {
+      "name": "Maintenance",
+      "count": 13
+    },
+    {
+      "name": "Technology",
+      "count": 13
+    },
+    {
+      "name": "Garden Tools",
+      "count": 13
+    },
+    {
+      "name": "Multi-Category",
+      "count": 10
+    },
+    {
+      "name": "Consumer Electronics",
+      "count": 10
+    },
+    {
+      "name": "Computers",
+      "count": 10
+    },
+    {
+      "name": "Electrical Devices",
+      "count": 10
+    },
+    {
+      "name": "Recycling",
+      "count": 10
+    },
+    {
+      "name": "Hard Goods",
+      "count": 9
+    },
+    {
+      "name": "Biotechnology",
+      "count": 9
+    },
+    {
+      "name": "Renewable Energy",
+      "count": 8
+    },
+    {
+      "name": "Research",
+      "count": 7
+    },
+    {
+      "name": "Packaging",
+      "count": 6
+    },
+    {
+      "name": "Fishing",
+      "count": 5
+    },
+    {
+      "name": "Information",
+      "count": 5
+    },
+    {
+      "name": "Apparel Accessories,Label Manufacturer & Printing,",
+      "count": 4
+    },
+    {
+      "name": "Beauty Products",
+      "count": 4
+    },
+    {
+      "name": "Personal Care Products",
+      "count": 4
+    },
+    {
+      "name": "Oil & Gas",
+      "count": 4
+    },
+    {
+      "name": "Sporting Goods",
+      "count": 3
+    },
+    {
+      "name": "Musical Instruments",
+      "count": 3
+    },
+    {
+      "name": "Air Transportation",
+      "count": 2
+    },
+    {
+      "name": "Electricity",
+      "count": 2
+    },
+    {
+      "name": "Maritime Transportation",
+      "count": 2
+    },
+    {
+      "name": "Durable Goods",
+      "count": 2
+    },
+    {
+      "name": "Entertainment",
+      "count": 2
+    },
+    {
+      "name": "Jewelry",
+      "count": 2
+    },
+    {
+      "name": "Telecommunications",
+      "count": 2
+    },
+    {
+      "name": "Rubber Products",
+      "count": 1
+    },
+    {
+      "name": "Apparel Accessories,Packaging,Plastics",
+      "count": 1
+    },
+    {
+      "name": "Apparel,Apparel,Home Textiles,Apparel,Manufacturin",
+      "count": 1
+    },
+    {
+      "name": "Apparel,Manufacturing,Textiles",
+      "count": 1
+    },
+    {
+      "name": "Apparel Accessories,Apparel,Manufacturing,Textiles",
+      "count": 1
+    },
+    {
+      "name": "Apparel,Apparel,Manufacturing,Textiles",
+      "count": 1
+    },
+    {
+      "name": "Apparel,Textiles",
+      "count": 1
+    },
+    {
+      "name": "Appliances",
+      "count": 1
+    },
+    {
+      "name": "Accommodation",
+      "count": 1
+    },
+    {
+      "name": "Food,Food & Beverage,Food Manufacturing",
+      "count": 1
+    },
+    {
+      "name": "Sports Equipment",
+      "count": 1
+    },
+    {
+      "name": "Finance",
+      "count": 1
+    },
+    {
+      "name": "Financial Services",
+      "count": 1
+    },
+    {
+      "name": "Tobacco Products",
+      "count": 1
+    },
+    {
+      "name": "Civil Engineering Construction",
+      "count": 1
+    },
+    {
+      "name": "Ground Passenger Transportation",
+      "count": 1
+    },
+    {
+      "name": "Computing Infrastructure",
+      "count": 1
+    },
+    {
+      "name": "Logging",
+      "count": 1
+    }
+  ],
+  "totalCount": 4849
+}

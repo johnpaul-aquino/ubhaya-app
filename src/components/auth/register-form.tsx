@@ -22,9 +22,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { signIn } from 'next-auth/react';
+import { PasswordStrength } from './password-strength';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -40,8 +42,13 @@ export function RegisterForm() {
       password: '',
       confirmPassword: '',
       whatsappNumber: '',
+      address: '',
     },
   });
+
+  // Watch password field for strength indicator
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const password = form.watch('password');
 
   const onSubmit = async (data: RegisterInput) => {
     try {
@@ -75,7 +82,11 @@ export function RegisterForm() {
         router.push('/dashboard');
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      // Log error for debugging
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.error('Registration error:', error);
+      }
       toast.error('An unexpected error occurred');
     }
   };
@@ -186,6 +197,7 @@ export function RegisterForm() {
                   </div>
                 </FormControl>
                 <FormMessage />
+                <PasswordStrength password={password} />
               </FormItem>
             )}
           />
@@ -238,6 +250,27 @@ export function RegisterForm() {
                   <Input
                     type="tel"
                     placeholder="+1234567890"
+                    {...field}
+                    disabled={isSubmitting}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Address (Optional) */}
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address (Optional)</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Enter your address"
+                    className="resize-none"
+                    rows={3}
                     {...field}
                     disabled={isSubmitting}
                   />

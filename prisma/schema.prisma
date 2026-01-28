@@ -23,16 +23,15 @@ model User {
   lastName      String
   phoneNumber   String?
   whatsappNumber String?
+  address       String?
   avatar        String?
 
   // Status
   emailVerified DateTime?
   isActive      Boolean   @default(true)
 
-  // Team & Role
+  // System Role (for global permissions like ADMIN)
   role          UserRole  @default(MEMBER)
-  teamId        String?
-  team          Team?     @relation(fields: [teamId], references: [id])
 
   // Timestamps
   createdAt     DateTime  @default(now())
@@ -44,14 +43,101 @@ model User {
   accounts      Account[]
   passwordResets PasswordReset[]
 
-  // Dashboard Relations (connect to existing models later)
+  // Organization Relations
+  ownedOrganizations     Organization[]       @relation("OrganizationOwner")
+  organizationMemberships OrganizationMember[]
+
+  // Team Relations (many-to-many via TeamMember)
+  teamMemberships TeamMember[]
+
+  // Dashboard Relations
   contacts      Contact[]
   shipments     Shipment[]
 
+  // Collaboration Relations
+  contactNotes    ContactNote[]  @relation("ContactNoteAuthor")
+  documents       Document[]     @relation("DocumentAuthor")
+  documentLinks   DocumentLink[] @relation("DocumentLinkCreator")
+  activities      Activity[]     @relation("ActivityActor")
+  comments        Comment[]      @relation("CommentAuthor")
+  mentionedIn     Mention[]      @relation("UserMentions")
+  mentionsMade    Mention[]      @relation("UserMentioners")
+  notifications   Notification[] @relation("UserNotifications")
+
   @@index([email])
-  @@index([teamId])
   @@map("users")
 }
+
+// ============================================
+// ORGANIZATION MODELS
+// ============================================
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  avatar      String?
+
+  // Organization Owner
+  ownerId     String
+  owner       User     @relation("OrganizationOwner", fields: [ownerId], references: [id])
+
+  // Settings
+  maxTeams    Int      @default(5)
+  maxMembers  Int      @default(50)
+  isActive    Boolean  @default(true)
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  members     OrganizationMember[]
+  teams       Team[]
+  contacts    Contact[]            @relation("OrganizationContacts")
+  documents   Document[]           @relation("OrganizationDocuments")
+  activities  Activity[]           @relation("OrganizationActivities")
+
+  @@index([slug])
+  @@index([ownerId])
+  @@map("organizations")
+}
+
+// Junction table for User <-> Organization many-to-many relationship
+model OrganizationMember {
+  id             String   @id @default(cuid())
+
+  // Relations
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Role within this organization
+  orgRole        OrgRole      @default(MEMBER)
+
+  // Timestamps
+  joinedAt       DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Ensure user can only be in an organization once
+  @@unique([userId, organizationId])
+  @@index([userId])
+  @@index([organizationId])
+  @@map("organization_members")
+}
+
+enum OrgRole {
+  OWNER   // Full control, can delete organization
+  ADMIN   // Manage members, teams, settings
+  MEMBER  // Standard access
+  GUEST   // Read-only, limited access
+}
+
+// ============================================
+// TEAM MODELS
+// ============================================
 
 model Team {
   id          String    @id @default(cuid())
@@ -60,11 +146,15 @@ model Team {
   description String?
   avatar      String?
 
-  // Team Owner
+  // Team Owner (user ID who created/owns the team)
   ownerId     String
 
-  // Members
-  members     User[]
+  // Organization (team belongs to an organization)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Members (many-to-many via TeamMember)
+  members     TeamMember[]
 
   // Settings
   maxMembers  Int       @default(10)
@@ -76,9 +166,44 @@ model Team {
 
   // Relations (shared resources)
   contacts    Contact[]
+  documents   Document[]
+  activities  Activity[]
 
   @@index([slug])
+  @@index([ownerId])
+  @@index([organizationId])
   @@map("teams")
+}
+
+// Junction table for User <-> Team many-to-many relationship
+model TeamMember {
+  id        String     @id @default(cuid())
+
+  // Relations
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamId    String
+  team      Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  // Role within this team (can be different from user's global role)
+  teamRole  TeamRole   @default(MEMBER)
+
+  // Timestamps
+  joinedAt  DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Ensure user can only be in a team once
+  @@unique([userId, teamId])
+  @@index([userId])
+  @@index([teamId])
+  @@map("team_members")
+}
+
+enum TeamRole {
+  OWNER     // Team owner - full control
+  LEADER    // Team leader - manage members
+  MEMBER    // Standard member
+  VIEWER    // Read-only access
 }
 
 enum UserRole {
@@ -153,25 +278,335 @@ model PasswordReset {
 }
 
 // ============================================
-// PLACEHOLDER MODELS (to be implemented later)
+// CONTACTS
 // ============================================
 
 model Contact {
-  id        String   @id @default(cuid())
-  name      String
-  email     String?
-  phone     String?
-  userId    String
-  teamId    String?
-  createdAt DateTime @default(now())
+  id             String   @id @default(cuid())
+  name           String
+  email          String?
+  phone          String?
+  company        String?
+  position       String?
+  whatsappNumber String?
+  website        String?
+  address        String?
+  avatar         String?
+  avatarBg       String?
+  isTeamContact  Boolean  @default(false)
+  isOrgContact   Boolean  @default(false)
+  tags           String[]
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  team      Team?    @relation(fields: [teamId], references: [id])
+  // Ownership
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamId         String?
+  team           Team?         @relation(fields: [teamId], references: [id])
+  organizationId String?
+  organization   Organization? @relation("OrganizationContacts", fields: [organizationId], references: [id])
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  notes         ContactNote[]
+  comments      Comment[]
+  documentLinks DocumentLink[]
 
   @@index([userId])
   @@index([teamId])
+  @@index([organizationId])
+  @@index([email])
   @@map("contacts")
 }
+
+model ContactNote {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  isPinned  Boolean  @default(false)
+
+  // Relations
+  contactId String
+  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation("ContactNoteAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([contactId])
+  @@index([authorId])
+  @@map("contact_notes")
+}
+
+// ============================================
+// DOCUMENTS
+// ============================================
+
+model Document {
+  id            String             @id @default(cuid())
+  title         String
+  content       String?            @db.Text
+  contentJson   Json?              // Tiptap JSON document structure
+  contentFormat String             @default("PLAIN") // PLAIN | TIPTAP_JSON
+  type          DocumentType       @default(NOTE)
+  visibility    DocumentVisibility @default(PRIVATE)
+
+  // File fields (for FILE type)
+  fileName   String?
+  fileUrl    String?
+  fileSize   Int?
+  mimeType   String?
+
+  // Ownership
+  authorId       String
+  author         User               @relation("DocumentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  teamId         String?
+  team           Team?              @relation(fields: [teamId], references: [id])
+  organizationId String?
+  organization   Organization?      @relation("OrganizationDocuments", fields: [organizationId], references: [id])
+
+  // Timestamps
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  // Relations
+  links      DocumentLink[]
+  comments   Comment[]
+  activities Activity[]
+
+  @@index([authorId])
+  @@index([teamId])
+  @@index([organizationId])
+  @@index([type])
+  @@index([visibility])
+  @@map("documents")
+}
+
+model DocumentLink {
+  id         String   @id @default(cuid())
+  linkType   LinkType
+
+  // Parent document
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  // Target entity (polymorphic)
+  contactId  String?
+  contact    Contact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  facilityId String?  // Reference to facility JSON ID (not a DB relation)
+
+  // Who created the link
+  createdById String
+  createdBy   User     @relation("DocumentLinkCreator", fields: [createdById], references: [id])
+
+  // Timestamps
+  createdAt  DateTime @default(now())
+
+  @@unique([documentId, linkType, contactId])
+  @@unique([documentId, linkType, facilityId])
+  @@index([documentId])
+  @@index([contactId])
+  @@index([facilityId])
+  @@map("document_links")
+}
+
+enum DocumentType {
+  NOTE
+  FILE
+  MEETING_NOTE
+  TEMPLATE
+}
+
+enum DocumentVisibility {
+  PRIVATE
+  TEAM
+  ORGANIZATION
+  SHARED
+}
+
+enum LinkType {
+  CONTACT
+  FACILITY
+  TEAM
+}
+
+// ============================================
+// ACTIVITY / AUDIT LOG
+// ============================================
+
+model Activity {
+  id         String         @id @default(cuid())
+  action     ActivityAction
+  entityType EntityType
+  entityId   String
+  metadata   Json?
+
+  // Actor
+  userId     String
+  user       User           @relation("ActivityActor", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Optional document reference
+  documentId String?
+  document   Document?      @relation(fields: [documentId], references: [id], onDelete: SetNull)
+
+  // Team scope for filtering
+  teamId     String?
+  team       Team?          @relation(fields: [teamId], references: [id])
+
+  // Organization scope for filtering
+  organizationId String?
+  organization   Organization? @relation("OrganizationActivities", fields: [organizationId], references: [id])
+
+  // Timestamps
+  createdAt  DateTime       @default(now())
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([teamId])
+  @@index([organizationId])
+  @@index([createdAt])
+  @@map("activities")
+}
+
+enum ActivityAction {
+  // Document actions
+  DOCUMENT_CREATED
+  DOCUMENT_UPDATED
+  DOCUMENT_DELETED
+  DOCUMENT_SHARED
+  DOCUMENT_LINKED
+  DOCUMENT_UNLINKED
+
+  // Contact actions
+  CONTACT_CREATED
+  CONTACT_UPDATED
+  CONTACT_DELETED
+  CONTACT_NOTE_ADDED
+  CONTACT_SHARED
+
+  // Comment actions
+  COMMENT_ADDED
+  COMMENT_UPDATED
+  COMMENT_DELETED
+
+  // Mention actions
+  USER_MENTIONED
+
+  // Assignment actions
+  ASSIGNED
+  UNASSIGNED
+}
+
+enum EntityType {
+  DOCUMENT
+  CONTACT
+  TEAM
+  FACILITY
+  COMMENT
+}
+
+// ============================================
+// COMMENTS
+// ============================================
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+
+  // Author
+  authorId  String
+  author    User     @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Parent entity (polymorphic - document or contact)
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  contactId  String?
+  contact    Contact?  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  // Threading (replies)
+  parentId   String?
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Comment[] @relation("CommentReplies")
+
+  // Timestamps
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relations
+  mentions   Mention[]
+
+  @@index([documentId])
+  @@index([contactId])
+  @@index([authorId])
+  @@index([parentId])
+  @@map("comments")
+}
+
+// ============================================
+// MENTIONS & NOTIFICATIONS
+// ============================================
+
+model Mention {
+  id          String   @id @default(cuid())
+
+  // Who was mentioned
+  mentionedId String
+  mentionedUser User   @relation("UserMentions", fields: [mentionedId], references: [id], onDelete: Cascade)
+
+  // Who mentioned them
+  mentionerId String
+  mentioner   User     @relation("UserMentioners", fields: [mentionerId], references: [id], onDelete: Cascade)
+
+  // Where they were mentioned
+  commentId   String?
+  comment     Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+
+  @@index([mentionedId])
+  @@index([commentId])
+  @@map("mentions")
+}
+
+model Notification {
+  id         String           @id @default(cuid())
+  type       NotificationType
+  title      String
+  message    String
+  entityType EntityType?
+  entityId   String?
+  isRead     Boolean          @default(false)
+  readAt     DateTime?
+
+  // Recipient
+  userId     String
+  user       User             @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Timestamps
+  createdAt  DateTime         @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  MENTION
+  COMMENT
+  DOCUMENT_SHARED
+  ASSIGNMENT
+  TEAM_INVITE
+  SYSTEM
+}
+
+// ============================================
+// SHIPMENTS (placeholder)
+// ============================================
 
 model Shipment {
   id          String   @id @default(cuid())
@@ -186,4 +621,33 @@ model Shipment {
 
   @@index([userId])
   @@map("shipments")
+}
+
+// ============================================
+// FACILITIES
+// ============================================
+
+model Facility {
+  id              String   @id @default(cuid())
+  name            String
+  address         String
+  countryCode     String
+  countryName     String
+  lat             Float
+  lng             Float
+  sector          String[] // PostgreSQL array type
+  numberOfWorkers String?
+  parentCompany   String?
+  facilityType    String?
+  productType     String?
+  isClosed        Boolean  @default(false)
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([countryCode])
+  @@index([isClosed])
+  @@index([name])
+  @@map("facilities")
 }

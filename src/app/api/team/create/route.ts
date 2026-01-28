@@ -11,6 +11,7 @@ import { createTeamSchema } from '@/lib/validations/user';
 /**
  * Create a new team
  * POST /api/team/create
+ * Note: Users can now be part of multiple teams
  */
 export async function POST(request: NextRequest) {
   try {
@@ -20,22 +21,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
-      );
-    }
-
-    // Check if user already belongs to a team
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { teamId: true },
-    });
-
-    if (user?.teamId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'You already belong to a team. Leave your current team first.',
-        },
-        { status: 400 }
       );
     }
 
@@ -70,7 +55,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create team and assign user as owner
+    // Create team with owner as first member via TeamMember junction table
     const team = await prisma.team.create({
       data: {
         name,
@@ -78,27 +63,41 @@ export async function POST(request: NextRequest) {
         description,
         ownerId: session.user.id,
         members: {
-          connect: { id: session.user.id },
+          create: {
+            userId: session.user.id,
+            teamRole: 'OWNER',
+          },
         },
       },
       include: {
         members: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            role: true,
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                role: true,
+              },
+            },
           },
         },
       },
     });
 
-    // Update user role to TEAM_LEADER
-    await prisma.user.update({
+    // Update user role to TEAM_LEADER if not already admin
+    const currentUser = await prisma.user.findUnique({
       where: { id: session.user.id },
-      data: { role: 'TEAM_LEADER' },
+      select: { role: true },
     });
+
+    if (currentUser && currentUser.role !== 'ADMIN') {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { role: 'TEAM_LEADER' },
+      });
+    }
 
     return NextResponse.json({
       success: true,
@@ -109,6 +108,14 @@ export async function POST(request: NextRequest) {
         slug: team.slug,
         description: team.description,
         memberCount: team.members.length,
+        members: team.members.map(m => ({
+          id: m.user.id,
+          firstName: m.user.firstName,
+          lastName: m.user.lastName,
+          email: m.user.email,
+          role: m.user.role,
+          teamRole: m.teamRole,
+        })),
       },
     });
   } catch (error) {

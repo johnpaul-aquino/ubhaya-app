@@ -38,9 +38,11 @@ interface TeamMember {
   lastName: string;
   email: string;
   role: string;
+  teamRole?: string;
   avatar?: string | null;
-  createdAt: Date;
-  lastLoginAt?: Date | null;
+  createdAt: Date | string;
+  lastLoginAt?: Date | string | null;
+  joinedAt?: Date | string;
 }
 
 interface TeamMemberListProps {
@@ -48,6 +50,7 @@ interface TeamMemberListProps {
   currentUserId: string;
   teamOwnerId: string;
   canManage: boolean;
+  onMemberRemoved?: () => void;
 }
 
 export function TeamMemberList({
@@ -55,25 +58,34 @@ export function TeamMemberList({
   currentUserId,
   teamOwnerId,
   canManage,
+  onMemberRemoved,
 }: TeamMemberListProps) {
   const router = useRouter();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Colors for both UserRole and TeamRole
   const roleColors: Record<string, string> = {
+    // UserRole
     ADMIN: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    TEAM_LEADER:
-      'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    TEAM_LEADER: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
     MEMBER: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     VIEWER: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
+    // TeamRole
+    OWNER: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    LEADER: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
   };
 
   const roleIcons: Record<string, React.ReactNode> = {
+    // UserRole
     ADMIN: <Crown className="h-3 w-3" />,
     TEAM_LEADER: <Shield className="h-3 w-3" />,
     MEMBER: <Users className="h-3 w-3" />,
     VIEWER: <Eye className="h-3 w-3" />,
+    // TeamRole
+    OWNER: <Crown className="h-3 w-3" />,
+    LEADER: <Shield className="h-3 w-3" />,
   };
 
   const handleRemoveMember = async () => {
@@ -95,6 +107,7 @@ export function TeamMemberList({
       toast.success('Member removed successfully');
       setShowRemoveDialog(false);
       setSelectedMember(null);
+      onMemberRemoved?.();
       router.refresh();
     } catch (error) {
       console.error('Remove member error:', error);
@@ -138,6 +151,8 @@ export function TeamMemberList({
           const isCurrentUser = member.id === currentUserId;
           const isOwner = member.id === teamOwnerId;
           const canManageMember = canManage && !isCurrentUser && !isOwner;
+          // Use teamRole if available, otherwise fall back to role
+          const displayRole = member.teamRole || member.role;
 
           return (
             <div
@@ -166,9 +181,9 @@ export function TeamMemberList({
                   </div>
                   <p className="text-sm text-muted-foreground">{member.email}</p>
                   <div className="mt-1 flex items-center gap-2">
-                    <Badge className={`${roleColors[member.role]} flex items-center gap-1`}>
-                      {roleIcons[member.role]}
-                      {member.role.replace('_', ' ')}
+                    <Badge className={`${roleColors[displayRole] || roleColors.MEMBER} flex items-center gap-1`}>
+                      {roleIcons[displayRole] || roleIcons.MEMBER}
+                      {displayRole.replace('_', ' ')}
                     </Badge>
                     {member.lastLoginAt && (
                       <span className="text-xs text-muted-foreground">
